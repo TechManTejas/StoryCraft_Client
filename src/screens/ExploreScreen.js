@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 
 import GridView from '../components/GridView'; // Adjust import path as per your project structure
 import BookDetailsScreen from './BookDetailsScreen'; // Adjust import path as per your project structure
 
-
 // Dummy data for books
 const books = [
   { id: '1', title: 'Book 1', image: 'https://via.placeholder.com/150', rating: 4.5, author: 'Author 1', summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.' },
@@ -41,6 +40,7 @@ const ExploreScreen = () => {
         <TextInput
           style={styles.searchInput}
           placeholder="Search books..."
+          placeholderTextColor="#929292"
           onChangeText={handleSearch}
           value={searchQuery}
         />
@@ -48,11 +48,8 @@ const ExploreScreen = () => {
           <Text style={styles.searchBtnText}>Search</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <Text style={styles.heading}>Explore Books</Text>
-          <GridView data={filteredBooks} onPress={handleBookPress} />
-        </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollViewContent}>
+        <GridView data={filteredBooks} onPress={handleBookPress} />
       </ScrollView>
     </View>
   );
@@ -61,29 +58,19 @@ const ExploreScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8E5FF',
+    backgroundColor: '#242424',
     padding: 20,
   },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
   searchBar: {
+    marginTop: 20, // Adjust margin top to create space below the top of the screen
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    width: 350,
+    backgroundColor: '#494949',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#ffffff', // White border
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
@@ -92,24 +79,23 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
     flex: 1,
+    paddingHorizontal: 10,
+    color: '#dbdbdb',
   },
   searchBtn: {
-    backgroundColor: '#474dc3',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#f60b0e',
     marginLeft: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 15,
   },
   searchBtnText: {
     color: '#fff',
     fontSize: 16,
+  },
+  scrollViewContent: {
+    paddingBottom: 20,
   },
 });
 

@@ -1,57 +1,112 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import ChapterDetails from './ChapterDetails';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ChapterDetails from './ChapterDetails'; // Ensure this component exists and is imported correctly
 
-const genres = [
-  'Action ', 'Animation ', 'Comedy ', 'Crime ',
-  'Drama ', 'Experimental ', 'Fantasy ', 'Historical Genre',
-  'Horror ', 'Romance ', 'Science Fiction ', 'Thriller ',
-  'Western ', 'Musical ', 'War '
-];
-
-const StoryScreen = () => {
+const StoryScreen = ({ navigation }) => {
+  const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [showChapterDetails, setShowChapterDetails] = useState(false);
 
-  const handleGenrePress = (genre) => {
-    if (selectedGenres.includes(genre)) {
-      setSelectedGenres(selectedGenres.filter(item => item !== genre));
-    } else if (selectedGenres.length < 1) {
-      setSelectedGenres([...selectedGenres, genre]);
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        console.log('User Token:', token); // Log the token for verification
+        if (!token) {
+          throw new Error('Token not found');
+        }
+
+        const response = await fetch('http://51.20.4.46/genres/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text(); // Attempt to retrieve a more descriptive error message
+          console.error('HTTP error status:', response.status, 'Message:', errorMessage);
+          throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        console.log('Fetched genres:', data); // Log the fetched genres for debugging
+        setGenres(data);
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+        if (error.message === 'Token not found' || error.message.startsWith('HTTP')) {
+          navigation.navigate('LoginScreen'); // Adjust the navigation target as needed
+        }
+      }
+    };
+
+    fetchGenres();
+  }, [navigation]);
+
+  const handleGenrePress = (genreId) => {
+    const isSelected = selectedGenres.includes(genreId);
+    if (isSelected) {
+      setSelectedGenres(selectedGenres.filter(id => id!== genreId));
+    } else {
+      setSelectedGenres([...selectedGenres, genreId]);
     }
   };
 
-  const handleLetsGoPress = () => {
-    setShowChapterDetails(true);
-  };
+  const handleLetsGoPress = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      console.log('Selected Genres:', selectedGenres); // Log the selected genres for verification
+      if (!token) {
+        throw new Error('Token not found');
+      }
 
-  const handleLetsTwistPress = () => {
-    // Handle "Let's Twist the Journey" action here
-  };
+      const response = await fetch('http://51.20.4.46/stories/generate_story/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+        body: JSON.stringify({ genre_ids: selectedGenres }),
+      });
 
-  if (showChapterDetails) {
-    return (
-      <ChapterDetails handleLetsTwistPress={handleLetsTwistPress} />
-    );
-  }
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        console.error('HTTP error status:', response.status, 'Message:', errorMessage);
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      console.log('Generated Story:', data); 
+
+      // Navigate to ChapterDetails screen with necessary params
+      navigation.navigate('ChapterDetails', {
+        genreId: data.genre_id,
+        token: token,
+      });
+    } catch (error) {
+      console.error('Error generating story:', error);
+      Alert.alert('Error', 'Failed to generate story');
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.sectionTitle}>Choose Genre</Text>
       <View style={styles.gridContainer}>
-        {genres.map((genre) => (
+        {genres.map((genre, index) => (
           <TouchableOpacity
-            key={genre}
-            style={[styles.optionButton, selectedGenres.includes(genre) && styles.selectedOption]}
-            onPress={() => handleGenrePress(genre)}
+            key={genre.id} // Use genre.id as the key
+            style={[styles.card, selectedGenres.includes(genre.id.toString()) && styles.selectedCard]}
+            onPress={() => handleGenrePress(genre.id)}
           >
-            <Text style={styles.optionText}>{genre}</Text>
+            <Text style={styles.cardText}>{genre.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
 
       <TouchableOpacity
-        style={[styles.letsGoButton, !selectedGenres.length && styles.disabledButton]}
+        style={[styles.letsGoButton,!selectedGenres.length && styles.disabledButton]}
         onPress={handleLetsGoPress}
         disabled={!selectedGenres.length}
       >
@@ -63,42 +118,44 @@ const StoryScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 10,
     flex: 1,
-    backgroundColor: '#E8E5FF',
+    backgroundColor: '#242424',
     padding: 10,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 10,
-    color: '#23298E',
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  optionButton: {
-    backgroundColor: '#474dc3',
+  card: {
+    backgroundColor: '#494949',
     padding: 15,
     borderRadius: 10,
     margin: 5,
-    width: 300,
     justifyContent: 'center',
     alignItems: 'center',
     height: 80,
+    width: '98%',
+    borderWidth: 1,
+    borderColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
   },
-  optionText: {
-    color: '#FFFFFF',
+  cardText: {
+    color: '#dbdbdb',
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
   },
-  selectedOption: {
-    backgroundColor: '#23298E',
+  selectedCard: {
+    backgroundColor: '#6d6d6d',
   },
   letsGoButton: {
-    backgroundColor: '#23298E',
+    backgroundColor: '#f60b0e',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
