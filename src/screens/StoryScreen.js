@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ChapterDetails from './ChapterDetails'; // Ensure this component exists and is imported correctly
 
 const StoryScreen = ({ navigation }) => {
   const [genres, setGenres] = useState([]);
   const [selectedGenres, setSelectedGenres] = useState([]);
-  const [showChapterDetails, setShowChapterDetails] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchGenres = async () => {
       try {
         const token = await AsyncStorage.getItem('userToken');
-        console.log('User Token:', token); // Log the token for verification
         if (!token) {
           throw new Error('Token not found');
         }
@@ -26,19 +24,21 @@ const StoryScreen = ({ navigation }) => {
         });
 
         if (!response.ok) {
-          const errorMessage = await response.text(); // Attempt to retrieve a more descriptive error message
-          console.error('HTTP error status:', response.status, 'Message:', errorMessage);
-          throw new Error(errorMessage);
+          const errorMessage = await response.text();
+          throw new Error(`HTTP error status: ${response.status}, Message: ${errorMessage}`);
         }
 
         const data = await response.json();
-        console.log('Fetched genres:', data); // Log the fetched genres for debugging
         setGenres(data);
       } catch (error) {
         console.error('Error fetching genres:', error);
         if (error.message === 'Token not found' || error.message.startsWith('HTTP')) {
-          navigation.navigate('LoginScreen'); // Adjust the navigation target as needed
+          navigation.navigate('LoginScreen'); // Navigate to login screen on token error
+        } else {
+          Alert.alert('Error', 'Failed to fetch genres');
         }
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -48,7 +48,7 @@ const StoryScreen = ({ navigation }) => {
   const handleGenrePress = (genreId) => {
     const isSelected = selectedGenres.includes(genreId);
     if (isSelected) {
-      setSelectedGenres(selectedGenres.filter(id => id!== genreId));
+      setSelectedGenres(selectedGenres.filter(id => id !== genreId));
     } else {
       setSelectedGenres([...selectedGenres, genreId]);
     }
@@ -57,7 +57,6 @@ const StoryScreen = ({ navigation }) => {
   const handleLetsGoPress = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      console.log('Selected Genres:', selectedGenres); // Log the selected genres for verification
       if (!token) {
         throw new Error('Token not found');
       }
@@ -73,14 +72,14 @@ const StoryScreen = ({ navigation }) => {
 
       if (!response.ok) {
         const errorMessage = await response.text();
-        console.error('HTTP error status:', response.status, 'Message:', errorMessage);
-        throw new Error(errorMessage);
+        if (errorMessage === '{"error":"Genre not found"}') {
+          Alert.alert('Error', 'The selected genre is not available.');
+        } else {
+          throw new Error(`HTTP error status: ${response.status}, Message: ${errorMessage}`);
+        }
       }
 
       const data = await response.json();
-      console.log('Generated Story:', data); 
-
-      // Navigate to ChapterDetails screen with necessary params
       navigation.navigate('ChapterDetails', {
         genreId: data.genre_id,
         token: token,
@@ -91,13 +90,21 @@ const StoryScreen = ({ navigation }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#dbdbdb" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.gridContainer}>
         {genres.map((genre, index) => (
           <TouchableOpacity
-            key={genre.id} // Use genre.id as the key
-            style={[styles.card, selectedGenres.includes(genre.id.toString()) && styles.selectedCard]}
+            key={genre.id}
+            style={[styles.card, selectedGenres.includes(genre.id) && styles.selectedCard]}
             onPress={() => handleGenrePress(genre.id)}
           >
             <Text style={styles.cardText}>{genre.name}</Text>
@@ -106,7 +113,7 @@ const StoryScreen = ({ navigation }) => {
       </View>
 
       <TouchableOpacity
-        style={[styles.letsGoButton,!selectedGenres.length && styles.disabledButton]}
+        style={[styles.letsGoButton, !selectedGenres.length && styles.disabledButton]}
         onPress={handleLetsGoPress}
         disabled={!selectedGenres.length}
       >
@@ -136,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 80,
-    width: '98%',
+    width: '95%',
     borderWidth: 1,
     borderColor: '#ffffff',
     shadowColor: '#000',
@@ -168,6 +175,12 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: '#888',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#242424',
   },
 });
 
