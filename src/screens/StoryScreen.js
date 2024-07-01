@@ -29,6 +29,7 @@ const StoryScreen = ({ navigation }) => {
         }
 
         const data = await response.json();
+        console.log('Fetched Genres:', data); // Log fetched genres
         setGenres(data);
       } catch (error) {
         console.error('Error fetching genres:', error);
@@ -50,7 +51,7 @@ const StoryScreen = ({ navigation }) => {
     if (isSelected) {
       setSelectedGenres(selectedGenres.filter(id => id !== genreId));
     } else {
-      setSelectedGenres([...selectedGenres, genreId]);
+      setSelectedGenres([genreId]); // Ensure only one genre can be selected
     }
   };
 
@@ -60,35 +61,41 @@ const StoryScreen = ({ navigation }) => {
       if (!token) {
         throw new Error('Token not found');
       }
-
+  
+      console.log('Selected Genres:', selectedGenres);
+  
       const response = await fetch('http://51.20.4.46/stories/generate_story/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,
         },
-        body: JSON.stringify({ genre_ids: selectedGenres }),
+        body: JSON.stringify({ genre_id: selectedGenres[0] }),
       });
-
+  
       if (!response.ok) {
         const errorMessage = await response.text();
-        if (errorMessage === '{"error":"Genre not found"}') {
+        console.error('Error response from server:', errorMessage);
+        if (response.status === 404 && errorMessage === '{"error":"Genre not found"}') {
           Alert.alert('Error', 'The selected genre is not available.');
         } else {
           throw new Error(`HTTP error status: ${response.status}, Message: ${errorMessage}`);
         }
+      } else {
+        const data = await response.json();
+        console.log('Generated Story Data:', data);
+        navigation.navigate('ChapterDetails', {
+          genreId: data.response.genre,
+          token: token,
+        });
       }
-
-      const data = await response.json();
-      navigation.navigate('ChapterDetails', {
-        genreId: data.genre_id,
-        token: token,
-      });
     } catch (error) {
-      console.error('Error generating story:', error);
+     // console.error('Error generating story:', error);
       Alert.alert('Error', 'Failed to generate story');
     }
   };
+  
+  
 
   if (loading) {
     return (
@@ -101,13 +108,13 @@ const StoryScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.gridContainer}>
-        {genres.map((genre, index) => (
+        {genres.map((genre) => (
           <TouchableOpacity
             key={genre.id}
             style={[styles.card, selectedGenres.includes(genre.id) && styles.selectedCard]}
             onPress={() => handleGenrePress(genre.id)}
           >
-            <Text style={styles.cardText}>{genre.name}</Text>
+            <Text style={styles.cardText}>{genre.name} (ID: {genre.id})</Text>
           </TouchableOpacity>
         ))}
       </View>
