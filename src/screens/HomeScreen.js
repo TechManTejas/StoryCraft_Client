@@ -2,7 +2,6 @@ import React from "react";
 import {
   FlatList,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
