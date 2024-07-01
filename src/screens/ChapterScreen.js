@@ -1,20 +1,28 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+  Image,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
   // Function to split content into pages
   const splitContentIntoPages = (content) => {
-    const words = content.split(' ');
+    const words = content.split(" ");
     const pages = [];
-    let currentPage = '';
+    let currentPage = "";
 
     words.forEach((word) => {
       if ((currentPage + word).length <= 300) {
-        currentPage += word + ' ';
+        currentPage += word + " ";
       } else {
         pages.push(currentPage.trim());
-        currentPage = word + ' ';
+        currentPage = word + " ";
       }
     });
 
@@ -26,7 +34,7 @@ const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
   };
 
   const pages = splitContentIntoPages(chapterContent);
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get("window").width;
 
   return (
     <View style={styles.container}>
@@ -36,9 +44,9 @@ const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
         </TouchableOpacity>
         <Text style={styles.chapterTitle}>{chapterTitle}</Text>
       </View>
-      <ScrollView 
-        horizontal 
-        pagingEnabled 
+      <ScrollView
+        horizontal
+        pagingEnabled
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}
@@ -46,11 +54,13 @@ const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
         {pages.map((page, index) => (
           <View key={index} style={[styles.page, { width: screenWidth }]}>
             <Text style={styles.pageContent}>{page}</Text>
-            <Image 
-              source={{ uri: 'https://via.placeholder.com/150' }} 
-              style={styles.pageImage} 
+            <Image
+              source={{ uri: "https://via.placeholder.com/150" }}
+              style={styles.pageImage}
             />
-            <Text style={styles.pageNumber}>{`Page ${index + 1} of ${pages.length}`}</Text>
+            <Text style={styles.pageNumber}>{`Page ${index + 1} of ${
+              pages.length
+            }`}</Text>
           </View>
         ))}
       </ScrollView>
@@ -61,43 +71,43 @@ const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8E5FF',
+    backgroundColor: "#E8E5FF",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#474dc3',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#474dc3",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    width:400,
+    width: 400,
   },
   backButton: {
     marginRight: 10,
   },
   chapterTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    textAlign: "center",
     flex: 1,
   },
   scrollView: {
     flex: 1,
   },
   scrollViewContent: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   page: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   pageContent: {
     fontSize: 16,
-    textAlign: 'left',
-    color: '#23298E',
+    textAlign: "left",
+    color: "#23298E",
     marginBottom: 20, // Add some margin to separate content from the image
   },
   pageImage: {
@@ -107,8 +117,8 @@ const styles = StyleSheet.create({
   },
   pageNumber: {
     fontSize: 14,
-    color: '#888',
-    textAlign: 'center',
+    color: "#888",
+    textAlign: "center",
   },
 });
 

@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated, Easing, StyleSheet, Text } from 'react-native';
+import React, { useEffect, useRef } from "react";
+import { View, Animated, Easing, StyleSheet, Text } from "react-native";
 
 const SplashScreen = ({ navigation }) => {
   const characters = "TSROCYARTF";
   const initialPositions = getInitialPositions(characters);
   const finalPositions = getFinalPositions();
 
-  const animationValues = characters.split('').reduce((acc, char) => {
+  const animationValues = characters.split("").reduce((acc, char) => {
     acc[char] = useRef(new Animated.Value(initialPositions[char])).current;
     return acc;
   }, {});
@@ -17,14 +17,14 @@ const SplashScreen = ({ navigation }) => {
     const totalDuration = 3000; // Total animation duration in milliseconds
 
     const timer = setTimeout(() => {
-      navigation.replace('BottomTabNavigator'); // Navigate to BottomTabNavigator after animations complete
+      navigation.replace("BottomTabNavigator"); // Navigate to BottomTabNavigator after animations complete
     }, totalDuration);
 
     return () => clearTimeout(timer); // Clean up timer on component unmount
   }, []);
 
   const animateCharacters = () => {
-    const animations = characters.split('').map((char, index) => {
+    const animations = characters.split("").map((char, index) => {
       const fromPosition = initialPositions[char];
       const toPosition = finalPositions[char];
 
@@ -41,26 +41,29 @@ const SplashScreen = ({ navigation }) => {
 
   function getInitialPositions(chars) {
     const positions = {};
-    chars.split('').forEach((char, index) => {
-      positions[char] = index *10; // Initial positions based on index (adjust as needed)
+    chars.split("").forEach((char, index) => {
+      positions[char] = index * 10; // Initial positions based on index (adjust as needed)
     });
     return positions;
   }
 
   function getFinalPositions() {
     const positions = {};
-    "STORYCRAFT".split('').forEach((char, index) => {
-      positions[char] = index *10; // Final positions based on index (adjust as needed)
+    "STORYCRAFT".split("").forEach((char, index) => {
+      positions[char] = index * 10; // Final positions based on index (adjust as needed)
     });
     return positions;
   }
 
   return (
     <View style={styles.container}>
-      {characters.split('').map((char, index) => (
+      {characters.split("").map((char, index) => (
         <Animated.Text
           key={index}
-          style={[styles.text, { transform: [{ translateX: animationValues[char] }] }]}
+          style={[
+            styles.text,
+            { transform: [{ translateX: animationValues[char] }] },
+          ]}
         >
           {char}
         </Animated.Text>
@@ -72,14 +75,14 @@ const SplashScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   text: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginHorizontal: 4,
   },
 });

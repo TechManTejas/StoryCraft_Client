@@ -219,21 +219,28 @@ const styles = StyleSheet.create({
 
 export default ChapterDetails;
 */
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import UpdatedStoryScreen from './UpdatedStoryScreen'; // Import the updated screen component
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import UpdatedStoryScreen from "./UpdatedStoryScreen"; // Import the updated screen component
 
 const ChapterDetails = () => {
   // Hardcoded values (to be replaced with API data)
-  const bookName = 'Adventures of the Unknown';
-  const chapterName = 'The Mysterious Forest';
-  const characterName = 'John Doe';
-  const storyBeginning = 'It was a dark and stormy night, and John Doe found himself in the middle of an eerie forest...';
-  
+  const bookName = "Adventures of the Unknown";
+  const chapterName = "The Mysterious Forest";
+  const characterName = "John Doe";
+  const storyBeginning =
+    "It was a dark and stormy night, and John Doe found himself in the middle of an eerie forest...";
+
   // Hardcoded situations
-  const situation1 = 'John finds a mysterious glowing orb.';
-  const situation2 = 'John hears a strange noise coming from the bushes.';
-  
+  const situation1 = "John finds a mysterious glowing orb.";
+  const situation2 = "John hears a strange noise coming from the bushes.";
+
   // State to handle the visibility of the situations and selected situation
   const [showSituations, setShowSituations] = useState(false);
   const [selectedSituation, setSelectedSituation] = useState(null);
@@ -266,41 +273,52 @@ const ChapterDetails = () => {
       <Text style={styles.detailText}>{characterName}</Text>
       <Text style={styles.detailTitle}>Beginning of the Story</Text>
       <Text style={styles.detailText}>{storyBeginning}</Text>
-      <TouchableOpacity style={styles.letsGoButton} onPress={() => setShowSituations(true)}>
+      <TouchableOpacity
+        style={styles.letsGoButton}
+        onPress={() => setShowSituations(true)}
+      >
         <Text style={styles.letsGoButtonText}>Let's Twist the Journey</Text>
       </TouchableOpacity>
-      
+
       {showSituations && (
         <>
           <Text style={styles.sectionTitle}>Choose a Situation</Text>
           <TouchableOpacity
             style={[
               styles.situationBox,
-              selectedSituation === 'situation1' && styles.selectedBox,
+              selectedSituation === "situation1" && styles.selectedBox,
             ]}
-            onPress={() => setSelectedSituation('situation1')}
+            onPress={() => setSelectedSituation("situation1")}
           >
-            <Text style={[
-              styles.situationText,
-              selectedSituation === 'situation1' && styles.selectedText
-            ]}>Situation 1: {situation1}</Text>
+            <Text
+              style={[
+                styles.situationText,
+                selectedSituation === "situation1" && styles.selectedText,
+              ]}
+            >
+              Situation 1: {situation1}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.situationBox,
-              selectedSituation === 'situation2' && styles.selectedBox,
+              selectedSituation === "situation2" && styles.selectedBox,
             ]}
-            onPress={() => setSelectedSituation('situation2')}
+            onPress={() => setSelectedSituation("situation2")}
           >
-            <Text style={[
-              styles.situationText,
-              selectedSituation === 'situation2' && styles.selectedText
-            ]}>Situation 2: {situation2}</Text>
+            <Text
+              style={[
+                styles.situationText,
+                selectedSituation === "situation2" && styles.selectedText,
+              ]}
+            >
+              Situation 2: {situation2}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.updateButton,
-              !selectedSituation && { backgroundColor: '#a8a8a8' } // Disable button if no situation is selected
+              !selectedSituation && { backgroundColor: "#a8a8a8" }, // Disable button if no situation is selected
             ]}
             onPress={handleUpdateStoryPress}
             disabled={!selectedSituation} // Disable button if no situation is selected
@@ -316,74 +334,74 @@ const ChapterDetails = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8E5FF',
+    backgroundColor: "#E8E5FF",
     padding: 10,
   },
   bookTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
-    color: '#23298E',
-    textAlign: 'center',
+    color: "#23298E",
+    textAlign: "center",
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
-    color: '#23298E',
+    color: "#23298E",
   },
   detailTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 5,
-    color: '#23298E',
+    color: "#23298E",
   },
   detailText: {
     fontSize: 16,
     marginVertical: 5,
-    color: '#474dc3',
+    color: "#474dc3",
   },
   letsGoButton: {
-    backgroundColor: '#23298E',
+    backgroundColor: "#23298E",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   letsGoButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   situationBox: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
     borderWidth: 2,
-    borderColor: '#474dc3',
+    borderColor: "#474dc3",
   },
   selectedBox: {
-    backgroundColor: '#c1c3e7',
+    backgroundColor: "#c1c3e7",
   },
   situationText: {
     fontSize: 16,
-    color: '#23298E',
+    color: "#23298E",
   },
   selectedText: {
-    color: '#ffffff',
+    color: "#ffffff",
   },
   updateButton: {
-    backgroundColor: '#23298E',
+    backgroundColor: "#23298E",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   updateButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

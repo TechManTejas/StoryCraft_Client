@@ -1,22 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import FinishStoryScreen from './FinishStoryScreen';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import FinishStoryScreen from "./FinishStoryScreen";
 
-const UpdatedStoryScreen = ({ storyBeginning, selectedSituation, situation1, situation2, setShowUpdatedStory, setSelectedSituation }) => {
-  const [updatedStory, setUpdatedStory] = useState('');
-  const [nextSituation1, setNextSituation1] = useState('');
-  const [nextSituation2, setNextSituation2] = useState('');
+const UpdatedStoryScreen = ({
+  storyBeginning,
+  selectedSituation,
+  situation1,
+  situation2,
+  setShowUpdatedStory,
+  setSelectedSituation,
+}) => {
+  const [updatedStory, setUpdatedStory] = useState("");
+  const [nextSituation1, setNextSituation1] = useState("");
+  const [nextSituation2, setNextSituation2] = useState("");
   const [nextSelectedSituation, setNextSelectedSituation] = useState(null);
   const [showNextSituations, setShowNextSituations] = useState(false);
   const [showFinishScreen, setShowFinishScreen] = useState(false); // State to control showing FinishStoryScreen
 
   useEffect(() => {
-    setUpdatedStory(`${storyBeginning} ${selectedSituation === 'situation1' ? situation1 : situation2}`);
+    setUpdatedStory(
+      `${storyBeginning} ${
+        selectedSituation === "situation1" ? situation1 : situation2
+      }`
+    );
   }, [storyBeginning, selectedSituation, situation1, situation2]);
 
   useEffect(() => {
-    setNextSituation1('John finds a hidden cave.');
-    setNextSituation2('John encounters a wild animal.');
+    setNextSituation1("John finds a hidden cave.");
+    setNextSituation2("John encounters a wild animal.");
   }, []);
 
   const handleTwistJourneyPress = () => {
@@ -25,7 +42,11 @@ const UpdatedStoryScreen = ({ storyBeginning, selectedSituation, situation1, sit
 
   const handleUpdateStoryPress = () => {
     if (nextSelectedSituation) {
-      const newStory = `${updatedStory} ${nextSelectedSituation === 'nextSituation1' ? nextSituation1 : nextSituation2}`;
+      const newStory = `${updatedStory} ${
+        nextSelectedSituation === "nextSituation1"
+          ? nextSituation1
+          : nextSituation2
+      }`;
       setUpdatedStory(newStory);
       setSelectedSituation(null);
       setShowNextSituations(false);
@@ -42,10 +63,16 @@ const UpdatedStoryScreen = ({ storyBeginning, selectedSituation, situation1, sit
       {!showFinishScreen ? (
         <>
           <Text style={styles.updatedStory}>{updatedStory}</Text>
-          <TouchableOpacity style={styles.twistButton} onPress={handleTwistJourneyPress}>
+          <TouchableOpacity
+            style={styles.twistButton}
+            onPress={handleTwistJourneyPress}
+          >
             <Text style={styles.twistButtonText}>Twist the Journey</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.finishButton} onPress={handleFinishStoryPress}>
+          <TouchableOpacity
+            style={styles.finishButton}
+            onPress={handleFinishStoryPress}
+          >
             <Text style={styles.finishButtonText}>Finish the Story</Text>
           </TouchableOpacity>
 
@@ -53,23 +80,46 @@ const UpdatedStoryScreen = ({ storyBeginning, selectedSituation, situation1, sit
             <>
               <Text style={styles.sectionTitle}>Choose a Situation</Text>
               <TouchableOpacity
-                style={[styles.situationBox, nextSelectedSituation === 'nextSituation1' && styles.selectedBox]}
-                onPress={() => setNextSelectedSituation('nextSituation1')}
+                style={[
+                  styles.situationBox,
+                  nextSelectedSituation === "nextSituation1" &&
+                    styles.selectedBox,
+                ]}
+                onPress={() => setNextSelectedSituation("nextSituation1")}
               >
-                <Text style={[styles.situationText, nextSelectedSituation === 'nextSituation1' && styles.selectedText]}>
+                <Text
+                  style={[
+                    styles.situationText,
+                    nextSelectedSituation === "nextSituation1" &&
+                      styles.selectedText,
+                  ]}
+                >
                   {nextSituation1}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.situationBox, nextSelectedSituation === 'nextSituation2' && styles.selectedBox]}
-                onPress={() => setNextSelectedSituation('nextSituation2')}
+                style={[
+                  styles.situationBox,
+                  nextSelectedSituation === "nextSituation2" &&
+                    styles.selectedBox,
+                ]}
+                onPress={() => setNextSelectedSituation("nextSituation2")}
               >
-                <Text style={[styles.situationText, nextSelectedSituation === 'nextSituation2' && styles.selectedText]}>
+                <Text
+                  style={[
+                    styles.situationText,
+                    nextSelectedSituation === "nextSituation2" &&
+                      styles.selectedText,
+                  ]}
+                >
                   {nextSituation2}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.updateButton, !nextSelectedSituation && { backgroundColor: '#a8a8a8' }]}
+                style={[
+                  styles.updateButton,
+                  !nextSelectedSituation && { backgroundColor: "#a8a8a8" },
+                ]}
                 onPress={handleUpdateStoryPress}
                 disabled={!nextSelectedSituation}
               >
@@ -79,7 +129,10 @@ const UpdatedStoryScreen = ({ storyBeginning, selectedSituation, situation1, sit
           )}
         </>
       ) : (
-        <FinishStoryScreen updatedStory={updatedStory} setShowUpdatedStory={setShowUpdatedStory} />
+        <FinishStoryScreen
+          updatedStory={updatedStory}
+          setShowUpdatedStory={setShowUpdatedStory}
+        />
       )}
     </ScrollView>
   );
@@ -88,73 +141,73 @@ const UpdatedStoryScreen = ({ storyBeginning, selectedSituation, situation1, sit
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8E5FF',
+    backgroundColor: "#E8E5FF",
     padding: 10,
   },
   updatedStory: {
     fontSize: 16,
-    color: '#474dc3',
+    color: "#474dc3",
     marginVertical: 10,
   },
   twistButton: {
-    backgroundColor: '#23298E',
+    backgroundColor: "#23298E",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 10,
   },
   twistButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   finishButton: {
-    backgroundColor: '#474dc3',
+    backgroundColor: "#474dc3",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 10,
   },
   finishButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 10,
-    color: '#23298E',
+    color: "#23298E",
   },
   situationBox: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
     borderWidth: 2,
-    borderColor: '#474dc3',
+    borderColor: "#474dc3",
   },
   selectedBox: {
-    backgroundColor: '#c1c3e7',
+    backgroundColor: "#c1c3e7",
   },
   situationText: {
     fontSize: 16,
-    color: '#23298E',
+    color: "#23298E",
   },
   selectedText: {
-    color: '#ffffff',
+    color: "#ffffff",
   },
   updateButton: {
-    backgroundColor: '#23298E',
+    backgroundColor: "#23298E",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   updateButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

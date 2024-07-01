@@ -1,11 +1,11 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Animated, Easing } from 'react-native';
-import HomeScreen from '../screens/HomeScreen';
-import StoryScreen from '../screens/StoryScreen';
-import ExploreScreen from '../screens/ExploreScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import { Icon } from 'react-native-elements';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Animated, Easing } from "react-native";
+import HomeScreen from "../screens/HomeScreen";
+import StoryScreen from "../screens/StoryScreen";
+import ExploreScreen from "../screens/ExploreScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import { Icon } from "react-native-elements";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +14,7 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
     const opacity = animationValue.interpolate({
       inputRange: [index - 1, index, index + 1],
       outputRange: [0.5, 1, 0.5],
-      extrapolate: 'clamp',
+      extrapolate: "clamp",
     });
     return { opacity };
   };
@@ -25,21 +25,23 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === 'Home') {
-            iconName = 'home';
-          } else if (route.name === 'Story') {
-            iconName = 'book';
-          } else if (route.name === 'Explore') {
-            iconName = 'search';
-          } else if (route.name === 'Profile') {
-            iconName = 'person';
+          if (route.name === "Home") {
+            iconName = "home";
+          } else if (route.name === "Story") {
+            iconName = "book";
+          } else if (route.name === "Explore") {
+            iconName = "search";
+          } else if (route.name === "Profile") {
+            iconName = "person";
           }
 
-          return <Icon name={iconName} type="material" color={color} size={size} />;
+          return (
+            <Icon name={iconName} type="material" color={color} size={size} />
+          );
         },
         tabBarStyle: {
-          backgroundColor: '#000000', // Dark black background color
-          shadowColor: '#000',
+          backgroundColor: "#000000", // Dark black background color
+          shadowColor: "#000",
           shadowOffset: {
             width: 0,
             height: -3,
@@ -48,10 +50,10 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
           shadowRadius: 4.65,
           elevation: 6,
           borderWidth: 0, // Remove border
-          overflow: 'hidden', // Ensure content inside doesn't overflow
+          overflow: "hidden", // Ensure content inside doesn't overflow
         },
-        tabBarActiveTintColor: '#FFFFFF', // White active tab color
-        tabBarInactiveTintColor: '#8E8E93', // Light gray inactive tab color
+        tabBarActiveTintColor: "#FFFFFF", // White active tab color
+        tabBarInactiveTintColor: "#8E8E93", // Light gray inactive tab color
         tabBarHideOnKeyboard: true, // Hide the tab bar when keyboard is shown
         headerShown: false,
         tabBarLabelStyle: {
@@ -65,34 +67,6 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
           paddingVertical: 10,
         },
       })}
-      tabBarOptions={{
-        activeTintColor: '#FFFFFF',
-        inactiveTintColor: '#8E8E93',
-        style: {
-          backgroundColor: '#000000',
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: -3,
-          },
-          shadowOpacity: 0.27,
-          shadowRadius: 4.65,
-          elevation: 6,
-          borderWidth: 0, // Remove border
-          overflow: 'hidden', // Ensure content inside doesn't overflow
-        },
-        labelStyle: {
-          fontSize: 12,
-          fontWeight: 'bold',
-          marginBottom: 5,
-        },
-        tabStyle: {
-          backgroundColor: '#000000',
-        },
-        showLabel: true,
-      }}
     >
       <Tab.Screen
         name="Home"
@@ -135,4 +109,3 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
 };
 
 export default BottomTabNavigator;
-

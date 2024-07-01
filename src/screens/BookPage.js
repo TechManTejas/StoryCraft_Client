@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import AddChapter from './AddChapter'; // Import AddChapter component
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import AddChapter from "./AddChapter"; // Import AddChapter component
 
 const BookPage = ({ book, onBack }) => {
-  const [view, setView] = useState('bookPage');
+  const [view, setView] = useState("bookPage");
 
   const handleAddChapter = () => {
-    setView('addChapter');
+    setView("addChapter");
   };
 
-  if (view === 'addChapter') {
-    return <AddChapter book={book} onBack={() => setView('bookPage')} />;
+  if (view === "addChapter") {
+    return <AddChapter book={book} onBack={() => setView("bookPage")} />;
   }
 
   return (
@@ -26,7 +32,10 @@ const BookPage = ({ book, onBack }) => {
             <Text style={styles.chapterButtonText}>Chapter {index + 1}</Text>
           </TouchableOpacity>
         ))}
-        <TouchableOpacity style={styles.addChapterButton} onPress={handleAddChapter}>
+        <TouchableOpacity
+          style={styles.addChapterButton}
+          onPress={handleAddChapter}
+        >
           <Text style={styles.addChapterButtonText}>Add Chapter</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -37,58 +46,58 @@ const BookPage = ({ book, onBack }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8E5FF',
+    backgroundColor: "#E8E5FF",
     padding: 20,
   },
   backButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 40,
     left: 20,
-    backgroundColor: '#23298E',
+    backgroundColor: "#23298E",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
   },
   bookTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    color: '#23298E',
-    textAlign: 'center',
+    color: "#23298E",
+    textAlign: "center",
     marginTop: 20,
   },
   chaptersContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   chapterButton: {
-    backgroundColor: '#23298E',
+    backgroundColor: "#23298E",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginTop: 10,
-    width: '80%',
-    alignItems: 'center',
+    width: "80%",
+    alignItems: "center",
   },
   chapterButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
   addChapterButton: {
-    backgroundColor: '#474dc3',
+    backgroundColor: "#474dc3",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginTop: 20,
-    width: '80%',
-    alignItems: 'center',
+    width: "80%",
+    alignItems: "center",
   },
   addChapterButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

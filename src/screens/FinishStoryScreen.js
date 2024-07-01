@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
 const FinishStoryScreen = ({ updatedStory, setShowUpdatedStory }) => {
   const [bookCover, setBookCover] = useState(null);
 
   const handleUploadBookCover = () => {
-    setBookCover('https://via.placeholder.com/150'); // Placeholder URL for demonstration
+    setBookCover("https://via.placeholder.com/150"); // Placeholder URL for demonstration
   };
 
   const handleSaveAndPublish = () => {
-    alert('Story saved and published!');
+    alert("Story saved and published!");
     setShowUpdatedStory(false); // Hide UpdatedStoryScreen
   };
 
@@ -23,13 +23,19 @@ const FinishStoryScreen = ({ updatedStory, setShowUpdatedStory }) => {
           <Image source={{ uri: bookCover }} style={styles.uploadedBookCover} />
         </View>
       ) : (
-        <TouchableOpacity style={styles.uploadButton} onPress={handleUploadBookCover}>
+        <TouchableOpacity
+          style={styles.uploadButton}
+          onPress={handleUploadBookCover}
+        >
           <Text style={styles.uploadButtonText}>Upload Book Cover</Text>
         </TouchableOpacity>
       )}
 
       {bookCover && (
-        <TouchableOpacity style={styles.savePublishButton} onPress={handleSaveAndPublish}>
+        <TouchableOpacity
+          style={styles.savePublishButton}
+          onPress={handleSaveAndPublish}
+        >
           <Text style={styles.savePublishButtonText}>Save and Publish</Text>
         </TouchableOpacity>
       )}
@@ -40,55 +46,55 @@ const FinishStoryScreen = ({ updatedStory, setShowUpdatedStory }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8E5FF',
+    backgroundColor: "#E8E5FF",
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#23298E',
+    fontWeight: "bold",
+    color: "#23298E",
     marginBottom: 20,
   },
   updatedStory: {
     fontSize: 18,
-    color: '#474dc3',
-    textAlign: 'center',
+    color: "#474dc3",
+    textAlign: "center",
     marginBottom: 20,
   },
   uploadedBookCoverContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   uploadedBookCover: {
     width: 150,
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     borderRadius: 10,
   },
   uploadButton: {
-    backgroundColor: '#23298E',
+    backgroundColor: "#23298E",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 10,
   },
   uploadButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   savePublishButton: {
-    backgroundColor: '#474dc3',
+    backgroundColor: "#474dc3",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 10,
   },
   savePublishButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Card } from '@gluestack-ui/themed';
-import { FontAwesome } from '@expo/vector-icons';
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Card } from "@gluestack-ui/themed";
+import { FontAwesome } from "@expo/vector-icons";
 
 const StoryCard = ({ title, author, description, image }) => {
   const [liked, setLiked] = useState(false);
@@ -41,45 +41,45 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     maxWidth: 360,
     margin: 12,
-    backgroundColor: '#2d2d2d',
-    shadowColor: '#fff',
+    backgroundColor: "#2d2d2d",
+    shadowColor: "#fff",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
   },
   image: {
     height: 240,
-    width: '100%',
+    width: "100%",
     borderRadius: 12,
     marginBottom: 16,
   },
   date: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 8,
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 8,
-    color: '#b6b6b6',
+    color: "#b6b6b6",
   },
   description: {
     marginTop: 4,
-    color: '#6d6d6d',
+    color: "#6d6d6d",
   },
   footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginTop: 8,
   },
   author: {
     fontSize: 14,
-    color: '#494949',
+    color: "#494949",
   },
   likeButton: {
-    marginLeft: 'auto',
+    marginLeft: "auto",
   },
 });
 

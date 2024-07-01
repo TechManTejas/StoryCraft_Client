@@ -193,30 +193,39 @@ const styles = StyleSheet.create({
 
 export default StoryScreen;
 */
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import ChapterDetails from './ChapterDetails';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import ChapterDetails from "./ChapterDetails";
 
 // Mapping of genres to their colors
 const genreColors = {
-  'Action': 'red',
-  'Animation': 'orange',
-  'Comedy': 'yellow',
-  'Crime': 'darkblue',
-  'Drama': 'blue',
-  'Experimental': 'cyan',
-  'Fantasy': 'pink',
-  'Historical Genre': 'brown',
-  'Horror': 'black',
+  Action: "red",
+  Animation: "orange",
+  Comedy: "yellow",
+  Crime: "darkblue",
+  Drama: "blue",
+  Experimental: "cyan",
+  Fantasy: "pink",
+  "Historical Genre": "brown",
+  Horror: "black",
 };
 
 const genres = [
-  'Action', 'Animation',
-  'Comedy',
-  'Crime', 'Drama',
-  'Experimental',
-  'Fantasy', 'Historical Genre',
-  'Horror',
+  "Action",
+  "Animation",
+  "Comedy",
+  "Crime",
+  "Drama",
+  "Experimental",
+  "Fantasy",
+  "Historical Genre",
+  "Horror",
 ];
 
 const StoryScreen = () => {
@@ -245,12 +254,19 @@ const StoryScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={[styles.borderedContainer, selectedGenre && { borderColor: genreColors[selectedGenre] }]}>
+      <View
+        style={[
+          styles.borderedContainer,
+          selectedGenre && { borderColor: genreColors[selectedGenre] },
+        ]}
+      >
         <View style={styles.row}>
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[0] ? { backgroundColor: genreColors[genres[0]] } : {},
+              selectedGenre === genres[0]
+                ? { backgroundColor: genreColors[genres[0]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[0])}
           >
@@ -259,7 +275,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[1] ? { backgroundColor: genreColors[genres[1]] } : {},
+              selectedGenre === genres[1]
+                ? { backgroundColor: genreColors[genres[1]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[1])}
           >
@@ -270,7 +288,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[2] ? { backgroundColor: genreColors[genres[2]] } : {},
+              selectedGenre === genres[2]
+                ? { backgroundColor: genreColors[genres[2]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[2])}
           >
@@ -281,7 +301,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[3] ? { backgroundColor: genreColors[genres[3]] } : {},
+              selectedGenre === genres[3]
+                ? { backgroundColor: genreColors[genres[3]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[3])}
           >
@@ -290,7 +312,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[4] ? { backgroundColor: genreColors[genres[4]] } : {},
+              selectedGenre === genres[4]
+                ? { backgroundColor: genreColors[genres[4]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[4])}
           >
@@ -301,7 +325,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[5] ? { backgroundColor: genreColors[genres[5]] } : {},
+              selectedGenre === genres[5]
+                ? { backgroundColor: genreColors[genres[5]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[5])}
           >
@@ -312,7 +338,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[6] ? { backgroundColor: genreColors[genres[6]] } : {},
+              selectedGenre === genres[6]
+                ? { backgroundColor: genreColors[genres[6]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[6])}
           >
@@ -321,7 +349,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[7] ? { backgroundColor: genreColors[genres[7]] } : {},
+              selectedGenre === genres[7]
+                ? { backgroundColor: genreColors[genres[7]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[7])}
           >
@@ -332,7 +362,9 @@ const StoryScreen = () => {
           <TouchableOpacity
             style={[
               styles.card,
-              selectedGenre === genres[8] ? { backgroundColor: genreColors[genres[8]] } : {},
+              selectedGenre === genres[8]
+                ? { backgroundColor: genreColors[genres[8]] }
+                : {},
             ]}
             onPress={() => handleGenrePress(genres[8])}
           >
@@ -355,7 +387,7 @@ const StoryScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#242424',
+    backgroundColor: "#242424",
     padding: 10,
   },
   borderedContainer: {
@@ -363,59 +395,55 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 2,
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 5,
   },
   card: {
-    backgroundColor: '#494949',
+    backgroundColor: "#494949",
     padding: 15,
     borderRadius: 10,
     margin: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     height: 80,
-    width: '48%',
+    width: "48%",
     borderWidth: 1,
-    borderColor: '#ffffff',
-    shadowColor: '#000',
+    borderColor: "#ffffff",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 3,
   },
   cardText: {
-    color: '#dbdbdb',
-    textAlign: 'center',
+    color: "#dbdbdb",
+    textAlign: "center",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   letsGoButton: {
-    backgroundColor: '#f60b0e',
+    backgroundColor: "#f60b0e",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   letsGoButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   disabledButton: {
-    backgroundColor: '#888',
+    backgroundColor: "#888",
   },
 });
 
 export default StoryScreen;
-
-
-
-

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Text } from 'react-native';
-import { Button } from '@gluestack-ui/themed';
+import React from "react";
+import { Text } from "react-native";
+import { Button } from "@gluestack-ui/themed";
 
 const StyledButton = ({ onPress }) => {
   return (
