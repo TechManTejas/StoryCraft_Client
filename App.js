@@ -14,7 +14,7 @@ export default function App() {
   return (
     <GluestackUIProvider config={config}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="SignupScreen" headerMode="none">
+        <Stack.Navigator initialRouteName="SignupScreen" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SignupScreen" component={SignupScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="SplashScreen" component={SplashScreen} />

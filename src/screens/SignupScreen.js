@@ -48,6 +48,7 @@ const SignupScreen = ({ navigation, onSignupSuccess }) => {
       }
     } catch (error) {
       console.error('Error signing up:', error);
+      console.log(JSON.stringify(error, null, 1));
       // Handle signup failure (show error message, etc.)
     }
   };
