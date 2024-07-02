@@ -12,6 +12,7 @@ import ChapterScreen from "./ChapterScreen"; // Assuming ChapterScreen.js is in 
 
 const BookDetailsScreen = ({ book, onBack }) => {
   const [selectedChapter, setSelectedChapter] = useState(null);
+  const [liked, setLiked] = useState(false);
 
   const chapters = [
     { id: "1", title: "Chapter 1", content: "Content of Chapter 1" },
@@ -32,6 +33,10 @@ const BookDetailsScreen = ({ book, onBack }) => {
 
   const handleBack = () => {
     setSelectedChapter(null);
+  };
+
+  const handleLike = () => {
+    setLiked(!liked);
   };
 
   return (
@@ -61,10 +66,13 @@ const BookDetailsScreen = ({ book, onBack }) => {
               />
               <Text style={styles.bookAuthor}>{book.author}</Text>
             </View>
-            <View style={styles.ratingContainer}>
-              <Ionicons name="star" size={20} color="#FFD700" />
-              <Text style={styles.bookRating}>{book.rating}</Text>
-            </View>
+            <TouchableOpacity onPress={handleLike}>
+              <Ionicons
+                name={liked ? "heart" : "heart-outline"}
+                size={24}
+                color={liked ? "#FF0000" : "#929292"}
+              />
+            </TouchableOpacity>
           </View>
           <View style={styles.summaryContainer}>
             <Text style={styles.bookSummary}>{book.summary}</Text>
@@ -86,6 +94,8 @@ const BookDetailsScreen = ({ book, onBack }) => {
               ))}
             </ScrollView>
           </View>
+          {/* Adding gap below Latest Chapters */}
+          <View style={{ marginBottom: 20 }} />
         </>
       )}
     </View>
@@ -96,13 +106,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#E8E5FF",
+    backgroundColor: "#242424",
     padding: 20,
   },
   imageContainer: {
     paddingTop: 10,
     marginBottom: 20,
-    shadowColor: "#000",
+    shadowColor: "#FFFFFF",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -118,7 +128,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
     borderRadius: 20,
     padding: 5,
   },
@@ -127,11 +137,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     textAlign: "center",
-    color: "#23298E",
+    color: "#dbdbdb",
   },
   detailsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center", // Added to align items vertically
     width: "100%",
     paddingHorizontal: 10,
     marginBottom: 20,
@@ -145,39 +156,30 @@ const styles = StyleSheet.create({
   },
   bookAuthor: {
     fontSize: 18,
-    color: "#23298E",
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  bookRating: {
-    fontSize: 18,
-    color: "#888",
-    marginLeft: 5,
+    color: "#dbdbdb",
   },
   summaryContainer: {
-    backgroundColor: "#474dc3",
+    backgroundColor: "#494949",
     padding: 10,
     borderRadius: 10,
     marginBottom: 20,
     width: "100%",
-    shadowColor: "#000",
+    shadowColor: "#FFFFFF",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    shadowRadius: 5,
+    elevation: 10,
   },
   bookSummary: {
     fontSize: 16,
     textAlign: "left",
-    color: "#FFFFFF",
+    color: "#dbdbdb",
   },
   latestChapters: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#23298E",
+    color: "#dbdbdb",
     alignSelf: "flex-start",
   },
   chapterScrollView: {
@@ -192,19 +194,19 @@ const styles = StyleSheet.create({
   },
   chapterButton: {
     minWidth: 330,
-    backgroundColor: "#23298E",
+    backgroundColor: "#000000",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 10,
     marginVertical: 5,
-    shadowColor: "#000",
+    shadowColor: "#FFFFFF",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
   },
   chapterButtonText: {
-    color: "#FFFFFF",
+    color: "#dbdbdb",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "left",

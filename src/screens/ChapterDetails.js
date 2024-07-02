@@ -264,15 +264,20 @@ const ChapterDetails = () => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.content}>
       <Text style={styles.bookTitle}>{bookName}</Text>
-      <Text style={styles.sectionTitle}>Chapter Details</Text>
-      <Text style={styles.detailTitle}>Chapter Name</Text>
-      <Text style={styles.detailText}>{chapterName}</Text>
-      <Text style={styles.detailTitle}>Character Name</Text>
-      <Text style={styles.detailText}>{characterName}</Text>
-      <Text style={styles.detailTitle}>Beginning of the Story</Text>
-      <Text style={styles.detailText}>{storyBeginning}</Text>
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailTitle}>Chapter Name</Text>
+        <Text style={styles.detailText}>{chapterName}</Text>
+      </View>
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailTitle}>Character Name</Text>
+        <Text style={styles.detailText}>{characterName}</Text>
+      </View>
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailTitle}>Beginning of the Story</Text>
+        <Text style={styles.detailText}>{storyBeginning}</Text>
+      </View>
       <TouchableOpacity
         style={styles.letsGoButton}
         onPress={() => setShowSituations(true)}
@@ -281,7 +286,7 @@ const ChapterDetails = () => {
       </TouchableOpacity>
 
       {showSituations && (
-        <>
+        <View style={styles.situationsContainer}>
           <Text style={styles.sectionTitle}>Choose a Situation</Text>
           <TouchableOpacity
             style={[
@@ -318,85 +323,128 @@ const ChapterDetails = () => {
           <TouchableOpacity
             style={[
               styles.updateButton,
-              !selectedSituation && { backgroundColor: "#a8a8a8" }, // Disable button if no situation is selected
+              !selectedSituation && { backgroundColor: "#494949" }, // Disable button if no situation is selected
             ]}
             onPress={handleUpdateStoryPress}
             disabled={!selectedSituation} // Disable button if no situation is selected
           >
             <Text style={styles.updateButtonText}>Update the Story</Text>
           </TouchableOpacity>
-        </>
+        </View>
       )}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
     flex: 1,
-    backgroundColor: "#E8E5FF",
+    backgroundColor: "#242424",
     padding: 10,
   },
   bookTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    marginVertical: 10,
-    color: "#23298E",
+    color: "#dbdbdb",
     textAlign: "center",
+    marginTop: 20, // Adjusted marginTop
+    marginBottom: 10, // Added marginBottom for spacing
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginVertical: 10,
-    color: "#23298E",
+    color: "#b6b6b6",
+    textAlign: "center",
+  },
+  detailContainer: {
+    backgroundColor: "#242424",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
+    borderWidth: 2,
+    borderColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   detailTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginVertical: 5,
-    color: "#23298E",
+    color: "#929292",
   },
   detailText: {
     fontSize: 16,
     marginVertical: 5,
-    color: "#474dc3",
+    color: "#6d6d6d",
   },
   letsGoButton: {
-    backgroundColor: "#23298E",
+    backgroundColor: "#494949",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   letsGoButtonText: {
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "bold",
   },
+  situationsContainer: {
+    backgroundColor: "#242424",
+    padding: 15,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+    marginBottom: 20, // Adjusted marginBottom for complete visibility
+  },
   situationBox: {
-    backgroundColor: "#fff",
+    backgroundColor: "#6d6d6d",
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
-    borderWidth: 2,
-    borderColor: "#474dc3",
+    borderWidth: 1,
+    borderColor: "#FFFFFF", // Ensure border remains white
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   selectedBox: {
-    backgroundColor: "#c1c3e7",
+    backgroundColor: "#FFA500", // Changed to orange
+    borderColor: "#FFFFFF", // Ensure border remains white
   },
   situationText: {
     fontSize: 16,
-    color: "#23298E",
+    color: "#dbdbdb",
   },
   selectedText: {
     color: "#ffffff",
   },
   updateButton: {
-    backgroundColor: "#23298E",
+    backgroundColor: "#000000",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   updateButtonText: {
     color: "#FFFFFF",

@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import FinishStoryScreen from "./FinishStoryScreen";
 
 const UpdatedStoryScreen = ({
@@ -13,6 +7,7 @@ const UpdatedStoryScreen = ({
   selectedSituation,
   situation1,
   situation2,
+  navigation, // Assuming you are using navigation prop
   setShowUpdatedStory,
   setSelectedSituation,
 }) => {
@@ -62,7 +57,9 @@ const UpdatedStoryScreen = ({
     <ScrollView style={styles.container}>
       {!showFinishScreen ? (
         <>
-          <Text style={styles.updatedStory}>{updatedStory}</Text>
+          <View style={styles.storyContainer}>
+            <Text style={styles.updatedStory}>{updatedStory}</Text>
+          </View>
           <TouchableOpacity
             style={styles.twistButton}
             onPress={handleTwistJourneyPress}
@@ -77,21 +74,19 @@ const UpdatedStoryScreen = ({
           </TouchableOpacity>
 
           {showNextSituations && (
-            <>
+            <View style={styles.nextSituationsContainer}>
               <Text style={styles.sectionTitle}>Choose a Situation</Text>
               <TouchableOpacity
                 style={[
                   styles.situationBox,
-                  nextSelectedSituation === "nextSituation1" &&
-                    styles.selectedBox,
+                  nextSelectedSituation === "nextSituation1" && styles.selectedBox,
                 ]}
                 onPress={() => setNextSelectedSituation("nextSituation1")}
               >
                 <Text
                   style={[
                     styles.situationText,
-                    nextSelectedSituation === "nextSituation1" &&
-                      styles.selectedText,
+                    nextSelectedSituation === "nextSituation1" && styles.selectedText,
                   ]}
                 >
                   {nextSituation1}
@@ -100,16 +95,14 @@ const UpdatedStoryScreen = ({
               <TouchableOpacity
                 style={[
                   styles.situationBox,
-                  nextSelectedSituation === "nextSituation2" &&
-                    styles.selectedBox,
+                  nextSelectedSituation === "nextSituation2" && styles.selectedBox,
                 ]}
                 onPress={() => setNextSelectedSituation("nextSituation2")}
               >
                 <Text
                   style={[
                     styles.situationText,
-                    nextSelectedSituation === "nextSituation2" &&
-                      styles.selectedText,
+                    nextSelectedSituation === "nextSituation2" && styles.selectedText,
                   ]}
                 >
                   {nextSituation2}
@@ -118,20 +111,21 @@ const UpdatedStoryScreen = ({
               <TouchableOpacity
                 style={[
                   styles.updateButton,
-                  !nextSelectedSituation && { backgroundColor: "#a8a8a8" },
+                  !nextSelectedSituation && { backgroundColor: "#494949" },
                 ]}
                 onPress={handleUpdateStoryPress}
                 disabled={!nextSelectedSituation}
               >
                 <Text style={styles.updateButtonText}>Update the Story</Text>
               </TouchableOpacity>
-            </>
+            </View>
           )}
         </>
       ) : (
         <FinishStoryScreen
           updatedStory={updatedStory}
           setShowUpdatedStory={setShowUpdatedStory}
+          navigation={navigation} // Pass navigation prop to FinishStoryScreen
         />
       )}
     </ScrollView>
@@ -141,20 +135,37 @@ const UpdatedStoryScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8E5FF",
+    backgroundColor: "#242424",
     padding: 10,
+  },
+  storyContainer: {
+    backgroundColor: "#494949",
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 20,
+    borderColor: "#FFFFFF",
+    borderWidth: 2,
+    shadowColor: "#FFFFFF", // White shadow color
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   updatedStory: {
     fontSize: 16,
-    color: "#474dc3",
-    marginVertical: 10,
+    color: "#dbdbdb",
   },
   twistButton: {
-    backgroundColor: "#23298E",
+    backgroundColor: "#6d6d6d",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 10,
+    shadowColor: "#FFFFFF", // White shadow color
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   twistButtonText: {
     color: "#FFFFFF",
@@ -162,47 +173,75 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   finishButton: {
-    backgroundColor: "#474dc3",
+    backgroundColor: "#494949",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 10,
+    shadowColor: "#FFFFFF", // White shadow color
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   finishButtonText: {
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "bold",
   },
+  nextSituationsContainer: {
+    backgroundColor: "#242424",
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 20,
+    borderColor: "#FFFFFF",
+    borderWidth: 2,
+    shadowColor: "#FFFFFF", // White shadow color
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
     marginVertical: 10,
-    color: "#23298E",
+    color: "#b6b6b6",
   },
   situationBox: {
-    backgroundColor: "#fff",
+    backgroundColor: "#494949",
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,
     borderWidth: 2,
-    borderColor: "#474dc3",
+    borderColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   selectedBox: {
-    backgroundColor: "#c1c3e7",
+    backgroundColor: "#FFA500", // Changed to orange for the selected situation
   },
   situationText: {
     fontSize: 16,
-    color: "#23298E",
+    color: "#dbdbdb",
   },
   selectedText: {
-    color: "#ffffff",
+    color: "#FFFFFF",
   },
   updateButton: {
-    backgroundColor: "#23298E",
+    backgroundColor: "#000000",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 20,
+    shadowColor: "#FFFFFF", // White shadow color
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
   },
   updateButtonText: {
     color: "#FFFFFF",

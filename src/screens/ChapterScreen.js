@@ -35,6 +35,7 @@ const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
 
   const pages = splitContentIntoPages(chapterContent);
   const screenWidth = Dimensions.get("window").width;
+  const screenHeight = Dimensions.get("window").height;
 
   return (
     <View style={styles.container}>
@@ -52,7 +53,7 @@ const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
         contentContainerStyle={styles.scrollViewContent}
       >
         {pages.map((page, index) => (
-          <View key={index} style={[styles.page, { width: screenWidth }]}>
+          <View key={index} style={[styles.page, { width: screenWidth - 50, height: screenHeight - 150 }]}>
             <Text style={styles.pageContent}>{page}</Text>
             <Image
               source={{ uri: "https://via.placeholder.com/150" }}
@@ -71,17 +72,19 @@ const ChapterScreen = ({ chapterTitle, chapterContent, onClose }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8E5FF",
+    backgroundColor: "#242424", // Background color updated
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#474dc3",
+    backgroundColor: "#000000", // Background color updated to black
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    width: 400,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#FFFFFF", // Border color set to white
   },
   backButton: {
     marginRight: 10,
@@ -103,21 +106,31 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: "#242424", // Background color updated
+    borderWidth: 1,
+    borderColor: "#FFFFFF",
+    borderRadius: 10,
+    margin: 10,
+    shadowColor: "#FFFFFF",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 10,
   },
   pageContent: {
     fontSize: 16,
     textAlign: "left",
-    color: "#23298E",
-    marginBottom: 20, // Add some margin to separate content from the image
+    color: "#dbdbdb", // Text color updated
+    marginBottom: 20, // Margin added
   },
   pageImage: {
     width: 150,
     height: 150,
-    marginBottom: 20, // Add some margin to separate image from the page number
+    marginBottom: 20, // Margin added
   },
   pageNumber: {
     fontSize: 14,
-    color: "#888",
+    color: "#929292", // Text color updated
     textAlign: "center",
   },
 });
