@@ -231,15 +231,15 @@ import UpdatedStoryScreen from "./UpdatedStoryScreen"; // Import the updated scr
 
 const ChapterDetails = () => {
   // Hardcoded values (to be replaced with API data)
-  const bookName = "Adventures of the Unknown";
-  const chapterName = "The Mysterious Forest";
-  const characterName = "John Doe";
+  const bookName = "Echoes of Time";
+  const chapterName = "The Forgotten Relic";
+  const characterName = " Alden Vale";
   const storyBeginning =
-    "It was a dark and stormy night, and John Doe found himself in the middle of an eerie forest...";
+    "Alden Vale, a historian with a mysterious past, uncovers an ancient artifact that could rewrite the annals of his homeland.";
 
   // Hardcoded situations
-  const situation1 = "John finds a mysterious glowing orb.";
-  const situation2 = "John hears a strange noise coming from the bushes.";
+  const situation1 = "In the heart of an ancient temple, Alden confronts a shadowy figure who claims to know his secret.";
+  const situation2 = "As he delves deeper into the relic's origins, Alden stumbles upon a forgotten city hidden beneath the sands of time.";
 
   // State to handle the visibility of the situations and selected situation
   const [showSituations, setShowSituations] = useState(false);

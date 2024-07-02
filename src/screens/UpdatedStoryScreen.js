@@ -27,8 +27,8 @@ const UpdatedStoryScreen = ({
   }, [storyBeginning, selectedSituation, situation1, situation2]);
 
   useEffect(() => {
-    setNextSituation1("John finds a hidden cave.");
-    setNextSituation2("John encounters a wild animal.");
+    setNextSituation1(" Venturing into a labyrinthine cave system, Alden encounters spectral entities that guard ancient knowledge, challenging him to solve riddles to proceed.");
+    setNextSituation2("In the depths of the Forgotten Vale, Alden discovers a portal leading to a parallel dimension, where he must navigate through a landscape transformed by time, encountering creatures and artifacts unlike any known to his world.");
   }, []);
 
   const handleTwistJourneyPress = () => {
@@ -143,13 +143,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     marginVertical: 20,
-    borderColor: "#FFFFFF",
+    borderColor: "green",
     borderWidth: 2,
-    shadowColor: "#FFFFFF", // White shadow color
+    shadowColor: "green", // White shadow color
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
+    elevation: 10,
   },
   updatedStory: {
     fontSize: 16,
@@ -161,11 +161,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 10,
-    shadowColor: "#FFFFFF", // White shadow color
+    shadowColor: "yellow", // White shadow color
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
+    shadowOpacity: 0.6,
     shadowRadius: 2,
-    elevation: 5,
+    elevation: 10,
   },
   twistButtonText: {
     color: "#FFFFFF",
@@ -178,11 +178,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     marginVertical: 10,
-    shadowColor: "#FFFFFF", // White shadow color
+    shadowColor: "#f60b0e", // White shadow color
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
+    elevation: 10,
   },
   finishButtonText: {
     color: "#FFFFFF",
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
+    elevation: 10,
   },
   selectedBox: {
     backgroundColor: "#FFA500", // Changed to orange for the selected situation

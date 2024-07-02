@@ -87,6 +87,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: "center",
+    shadowColor: "#f60b0e", // White shadow color
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 10,
     marginVertical: 20,
   },
   startButtonText: {

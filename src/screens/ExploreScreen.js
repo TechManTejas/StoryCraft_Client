@@ -14,55 +14,55 @@ import BookDetailsScreen from "./BookDetailsScreen"; // Adjust import path as pe
 const books = [
   {
     id: "1",
-    title: "Book 1",
+    title: "The Enchanted Forest",
     image: "https://via.placeholder.com/150",
     rating: 4.5,
-    author: "Author 1",
+    author: "Amani Blanchett",
     summary:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.",
+      " In The Enchanted Forest Amani Blanchett weaves a tale of magic and mystery as a young girl embarks on a journey to uncover her family's enchanted legacy amidst the ancient woods.",
   },
   {
     id: "2",
-    title: "Book 2",
+    title: "Dawn of the Dragon Kings",
     image: "https://via.placeholder.com/150",
     rating: 4.0,
-    author: "Author 2",
+    author: "Debra Sterling",
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.",
   },
   {
     id: "3",
-    title: "Book 3",
+    title: "Mysteries of the Crystal Sea",
     image: "https://via.placeholder.com/150",
     rating: 4.8,
-    author: "Author 3",
+    author: " Bradley Kjell",
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.",
   },
   {
     id: "4",
-    title: "Book 4",
+    title: "Chronicles of the Forgotten City",
     image: "https://via.placeholder.com/150",
     rating: 4.2,
-    author: "Author 4",
+    author: "Victoria Poyner",
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.",
   },
   {
     id: "5",
-    title: "Book 5",
+    title: "Legends of the Shadow Realm",
     image: "https://via.placeholder.com/150",
     rating: 4.3,
-    author: "Author 5",
+    author: "A Tim",
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.",
   },
   {
     id: "6",
-    title: "Book 6",
+    title: "Tales from the Etherium",
     image: "https://via.placeholder.com/150",
     rating: 4.7,
-    author: "Author 6",
+    author: "Bill Watts",
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.",
   },

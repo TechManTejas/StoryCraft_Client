@@ -15,7 +15,7 @@ const BookDetailsScreen = ({ book, onBack }) => {
   const [liked, setLiked] = useState(false);
 
   const chapters = [
-    { id: "1", title: "Chapter 1", content: "Content of Chapter 1" },
+    { id: "1", title: "The Call of the Wildwood", content: "Under the cloak of twilight, whispers of the ancient forest stirred the soul of twelve-year-old Elara. Her grandmother's tales of enchanted creatures and hidden pathways had always been a source of wonder. But tonight, as she sat by the hearth, the old woman's eyes held a new urgency. Your destiny awaits, child, she said, handing Elara a small, intricately carved pendant. When the moon is full and the stars align, follow the call of the wildwood. With those words, Elara's adventure began, leading her into a world where magic was real, and every shadow held a secret." },
     { id: "2", title: "Chapter 2", content: "Content of Chapter 2" },
     { id: "3", title: "Chapter 3", content: "Content of Chapter 3" },
     { id: "4", title: "Chapter 4", content: "Content of Chapter 4" },
