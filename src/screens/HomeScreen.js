@@ -40,27 +40,25 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Featured Stories</Text>
-      <View contentContainerStyle={styles.scrollContentContainer}>
-        <View style={styles.scrollContainer}>
-          <FlatList
-            data={stories}
-            renderItem={({ item }) => (
-              <StoryCard
-                title={item.title}
-                author={item.author}
-                description={item.description}
-                image={item.image}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.verticalList}
-            showsVerticalScrollIndicator={false}
+      <FlatList
+        data={stories}
+        renderItem={({ item }) => (
+          <StoryCard
+            title={item.title}
+            author={item.author}
+            description={item.description}
+            image={item.image}
           />
-        </View>
-        <TouchableOpacity style={styles.startButton}>
-          <Text style={styles.startButtonText}>Start Your Journey</Text>
-        </TouchableOpacity>
-      </View>
+        )}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.contentContainer}
+        ListFooterComponent={
+          <TouchableOpacity style={styles.startButton}>
+            <Text style={styles.startButtonText}>Start Your Journey</Text>
+          </TouchableOpacity>
+        }
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 };
@@ -80,19 +78,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
-  scrollContentContainer: {
+  contentContainer: {
     paddingBottom: 20,
-  },
-  scrollContainer: {
-    borderWidth: 2,
-    borderColor: "#494949",
-    borderRadius: 20,
-    overflow: "hidden",
-    marginBottom: 20,
-    shadowColor: "#fff",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
   },
   startButton: {
     backgroundColor: "#f60b0e",
@@ -100,7 +87,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: "center",
-    alignSelf: "center",
+    marginVertical: 20,
   },
   startButtonText: {
     fontSize: 16,
