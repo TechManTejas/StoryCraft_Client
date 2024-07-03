@@ -14,9 +14,7 @@ const StoryCard = ({ title, author, description, image }) => {
     <Card style={styles.card}>
       <Image
         style={styles.image}
-        source={{
-          uri: image,
-        }}
+        source={image} // Corrected to use required local asset
       />
       <Text style={styles.date}></Text>
       <Text style={styles.title}>{title}</Text>
@@ -25,9 +23,9 @@ const StoryCard = ({ title, author, description, image }) => {
         <Text style={styles.author}>{author}</Text>
         <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
           <FontAwesome
-            name={liked ? "heart" : "heart-o"}
+            name={liked? "heart" : "heart-o"}
             size={24}
-            color={liked ? "#f60b0e" : "#929292"}
+            color={liked? "#f60b0e" : "#929292"}
           />
         </TouchableOpacity>
       </View>

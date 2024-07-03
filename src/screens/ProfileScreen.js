@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import { View, Button, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
 
 // Import images from assets
-const book1 = require('../../assets/test.jpeg');
-const book2 = require('../../assets/test.jpeg');
-const book3 = require('../../assets/test.jpeg');
-const book4 = require('../../assets/test.jpeg');
-const book5 = require('../../assets/test.jpeg');
+const book1 = require('../../assets/images/story1.jpeg');
+const book2 = require('../../assets/images/story12.jpg');
+const book3 = require('../../assets/images/story9.jpeg');
+const book4 = require('../../assets/images/story7.jpeg');
+const book5 = require('../../assets/images/story14.jpg');
 
 const ProfileScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("John Doe");
+  const [username, setUsername] = useState("Bill Watts");
   const [bio, setBio] = useState("Passionate writer and developer");
   const [books, setBooks] = useState([
     { name: "Book 1", image: book1 },
@@ -29,14 +29,14 @@ const ProfileScreen = ({ navigation }) => {
     // Fetch user details from AsyncStorage or any other data source
     try {
       // Replace with actual AsyncStorage.getItem calls if needed
-      setUsername("John Doe");
+      setUsername("Bill Watts");
       setBio("Passionate writer and developer");
       setBooks([
-        { name: "Book 1", image: book1 },
-        { name: "Book 2", image: book2 },
-        { name: "Book 3", image: book3 },
-        { name: "Book 4", image: book4 },
-        { name: "Book 5", image: book5 },
+        { name: "The Epistle to the Colossians", image: book1 },
+        { name: "The Book of Acts", image: book2 },
+        { name: "The Revelation of John", image: book3 },
+        { name: "The Lotus Sutra", image: book4 },
+        { name: "Cyber City", image: book5 },
       ]);
     } catch (error) {
       console.error("Error fetching user data:", error);

@@ -50,7 +50,7 @@ const BookDetailsScreen = ({ book, onBack }) => {
       ) : (
         <>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: book.image }} style={styles.bookImage} />
+            <Image source={ book.image } style={styles.bookImage} />
             <TouchableOpacity style={styles.backButton} onPress={onBack}>
               <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
             </TouchableOpacity>

@@ -6,25 +6,34 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import GridView from "../components/GridView"; // Adjust import path as per your project structure
 import BookDetailsScreen from "./BookDetailsScreen"; // Adjust import path as per your project structure
+
+// Import images from assets
+const enchantedForest = require("../../assets/images/story1.jpeg");
+const dawnOfTheDragonKings = require("../../assets/images/story10.jpeg");
+const mysteriesOfTheCrystalSea = require("../../assets/images/story5.jpeg");
+const chroniclesOfTheForgottenCity = require("../../assets/images/story13.jpg");
+const legendsOfTheShadowRealm = require("../../assets/images/story11.jpg");
+const talesFromTheEtherium = require("../../assets/images/story9.jpeg");
 
 // Dummy data for books
 const books = [
   {
     id: "1",
     title: "The Enchanted Forest",
-    image: "https://via.placeholder.com/150",
+    image: enchantedForest,
     rating: 4.5,
     author: "Amani Blanchett",
     summary:
-      " In The Enchanted Forest Amani Blanchett weaves a tale of magic and mystery as a young girl embarks on a journey to uncover her family's enchanted legacy amidst the ancient woods.",
+      "In The Enchanted Forest Amani Blanchett weaves a tale of magic and mystery as a young girl embarks on a journey to uncover her family's enchanted legacy amidst the ancient woods.",
   },
   {
     id: "2",
     title: "Dawn of the Dragon Kings",
-    image: "https://via.placeholder.com/150",
+    image: dawnOfTheDragonKings,
     rating: 4.0,
     author: "Debra Sterling",
     summary:
@@ -33,16 +42,16 @@ const books = [
   {
     id: "3",
     title: "Mysteries of the Crystal Sea",
-    image: "https://via.placeholder.com/150",
+    image: mysteriesOfTheCrystalSea,
     rating: 4.8,
-    author: " Bradley Kjell",
+    author: "Bradley Kjell",
     summary:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae justo vel lorem tincidunt ultrices at non nunc. Donec in sapien viverra, tincidunt augue id, efficitur massa.",
   },
   {
     id: "4",
     title: "Chronicles of the Forgotten City",
-    image: "https://via.placeholder.com/150",
+    image: chroniclesOfTheForgottenCity,
     rating: 4.2,
     author: "Victoria Poyner",
     summary:
@@ -51,7 +60,7 @@ const books = [
   {
     id: "5",
     title: "Legends of the Shadow Realm",
-    image: "https://via.placeholder.com/150",
+    image: legendsOfTheShadowRealm,
     rating: 4.3,
     author: "A Tim",
     summary:
@@ -60,7 +69,7 @@ const books = [
   {
     id: "6",
     title: "Tales from the Etherium",
-    image: "https://via.placeholder.com/150",
+    image: talesFromTheEtherium,
     rating: 4.7,
     author: "Bill Watts",
     summary:

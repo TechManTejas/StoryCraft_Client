@@ -18,7 +18,7 @@ const GridView = ({ data, onPress }) => {
           onPress={() => onPress(item)}
         >
           <View style={styles.imageContainer}>
-            <Image source={{ uri: item.image }} style={styles.bookImage} />
+            <Image source={item.image} style={styles.bookImage} />
           </View>
           <View style={styles.bookDetails}>
             <Text style={styles.bookTitle}>{item.title}</Text>
@@ -37,15 +37,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    borderColor: "#fff", // Changed border color to white
-    borderWidth: 1, // Increased border width for visibility
-    borderRadius: 20, // Increased border radius
-    shadowColor: "#ffffff", // Changed shadow color to black
+    borderColor: "#fff",
+    borderWidth: 1,
+    borderRadius: 20,
+    shadowColor: "#ffffff",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 3,
-    backgroundColor: "#242424", // Optional: Set background color for the container
+    backgroundColor: "#242424",
     overflow: "hidden",
   },
   bookItem: {
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     backgroundColor: "#494949",
     borderRadius: 10,
-    shadowColor: "#000", // Changed shadow color to black
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -64,11 +64,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    height: 150, // Height of the image container
+    height: 200, // Adjusted height for better fitting
   },
   bookImage: {
-    width: "100%",
-    aspectRatio: 1, // Ensure the image maintains a square aspect ratio
+    width: "100%", // Adjusted width to fill the container
+    height: "100%", // Adjusted height to fill the container
+    resizeMode: "cover", // Ensures the image covers the area without stretching
     borderRadius: 10,
   },
   bookDetails: {

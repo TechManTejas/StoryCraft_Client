@@ -9,30 +9,31 @@ import {
 } from "react-native";
 import StoryCard from "../components/StoryCard";
 
+// Adjusted stories array with local asset paths
 const stories = [
   {
     id: "1",
-    title: "Story 1",
-    author: "John Smith",
+    title: "Chronicles of the Forgotten City",
+    author: "Victoria Poyner",
     description:
-      "Discover how the power of positive thinking can transform your life, boost your confidence, and help you overcome challenges.",
-    image: "https://via.placeholder.com/150",
+      "Chronicles of the Forgotten City is a gripping tale of adventure and discovery, following a group of explorers who uncover ancient secrets hidden beneath a long-lost civilization.",
+    image: require("../../assets/images/story12.jpg"), // Local asset path
   },
   {
     id: "2",
-    title: "Story 2",
-    author: "Jane Doe",
+    title: "Legends of the Shadow Realm",
+    author: "A Tim",
     description:
-      "Discover how the power of positive thinking can transform your life, boost your confidence, and help you overcome challenges.",
-    image: "https://via.placeholder.com/150",
+      "Legends of the Shadow Realm explores a parallel universe where souls of the fallen gather, awaiting return, amidst eternal twilight under a clouded sky, driven by the lore of the Shadow Dragon and the enigmatic Shadow God.",
+    image: require("../../assets/images/story9.jpeg"), // Local asset path
   },
   {
     id: "3",
-    title: "Story 3",
-    author: "Alice Johnson",
+    title: "The Enchanted Forest",
+    author: "Amani Blanchett",
     description:
-      "Discover how the power of positive thinking can transform your life, boost your confidence, and help you overcome challenges.",
-    image: "https://via.placeholder.com/150",
+     "The Enchanted Forest is a mystical realm filled with magical creatures, ancient trees, and hidden pathways, where every leaf whispers tales of forgotten kingdoms and the guardians who protect its secrets.",
+    image: require("../../assets/images/story1.jpeg"), // Local asset path
   },
 ];
 
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: "center",
-    shadowColor: "#f60b0e", // White shadow color
+    shadowColor: "#f60b0e",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
