@@ -13,7 +13,7 @@ export const api = {
     } catch (err) {
       return {
         isSuccess: false,
-        message: err,
+        message: err.message,
       };
     }
   },
@@ -26,8 +26,27 @@ export const api = {
     } catch (err) {
       return {
         isSuccess: false,
-        message: err,
+        message: err.message,
+      };
+    }
+  },
+
+  fetchGenres: async (token) => {
+    try {
+      console.log("Fetching genres with token:", token);
+      const res = await axiosInstance.get("/genres/", {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+
+      if (res.data) return { isSuccess: true, genres: res.data };
+    } catch (err) {
+      return {
+        isSuccess: false,
+        message: err.message,
       };
     }
   },
 };
+

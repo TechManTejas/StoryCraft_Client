@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import ChapterDetails from "./ChapterDetails";
+import { api } from "../api"; 
 
-// Mapping of genres to their colors
 const genreColors = {
   Action: "red",
   Animation: "orange",
@@ -17,31 +18,42 @@ const genreColors = {
   Drama: "blue",
   Experimental: "cyan",
   Fantasy: "pink",
-  "Historical Genre": "brown",
+  Historical: "brown",
   Horror: "black",
 };
 
-const genres = [
-  "Action",
-  "Animation",
-  "Comedy",
-  "Crime",
-  "Drama",
-  "Experimental",
-  "Fantasy",
-  "Historical Genre",
-  "Horror",
-];
-
-const StoryScreen = () => {
+const StoryScreen = ({ token }) => {
+  const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [showChapterDetails, setShowChapterDetails] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        console.log("Token received in StoryScreen:", token); // Debugging line
+        const response = await api.fetchGenres(token);
+
+        if (response.isSuccess) {
+          setGenres(response.genres);
+        } else {
+          console.error("Failed to fetch genres", response.message);
+        }
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGenres();
+  }, [token]);
 
   const handleGenrePress = (genre) => {
     if (selectedGenre === genre) {
-      setSelectedGenre(null); // Deselect if the same genre is clicked again
+      setSelectedGenre(null);
     } else {
-      setSelectedGenre(genre); // Select the new genre
+      setSelectedGenre(genre);
     }
   };
 
@@ -57,6 +69,14 @@ const StoryScreen = () => {
     return <ChapterDetails handleLetsTwistPress={handleLetsTwistPress} />;
   }
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View
@@ -65,117 +85,20 @@ const StoryScreen = () => {
           selectedGenre && { borderColor: genreColors[selectedGenre] },
         ]}
       >
-        <View style={styles.row}>
+        {genres.map((genre) => (
           <TouchableOpacity
+            key={genre.id}
             style={[
               styles.card,
-              selectedGenre === genres[0]
-                ? { backgroundColor: genreColors[genres[0]] }
+              selectedGenre === genre.name
+                ? { backgroundColor: genreColors[genre.name] }
                 : {},
             ]}
-            onPress={() => handleGenrePress(genres[0])}
+            onPress={() => handleGenrePress(genre.name)}
           >
-            <Text style={styles.cardText}>{genres[0]}</Text>
+            <Text style={styles.cardText}>{genre.name}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[1]
-                ? { backgroundColor: genreColors[genres[1]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[1])}
-          >
-            <Text style={styles.cardText}>{genres[1]}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.centeredRow}>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[2]
-                ? { backgroundColor: genreColors[genres[2]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[2])}
-          >
-            <Text style={styles.cardText}>{genres[2]}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.row}>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[3]
-                ? { backgroundColor: genreColors[genres[3]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[3])}
-          >
-            <Text style={styles.cardText}>{genres[3]}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[4]
-                ? { backgroundColor: genreColors[genres[4]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[4])}
-          >
-            <Text style={styles.cardText}>{genres[4]}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.centeredRow}>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[5]
-                ? { backgroundColor: genreColors[genres[5]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[5])}
-          >
-            <Text style={styles.cardText}>{genres[5]}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.row}>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[6]
-                ? { backgroundColor: genreColors[genres[6]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[6])}
-          >
-            <Text style={styles.cardText}>{genres[6]}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[7]
-                ? { backgroundColor: genreColors[genres[7]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[7])}
-          >
-            <Text style={styles.cardText}>{genres[7]}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.centeredRow}>
-          <TouchableOpacity
-            style={[
-              styles.card,
-              selectedGenre === genres[8]
-                ? { backgroundColor: genreColors[genres[8]] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genres[8])}
-          >
-            <Text style={styles.cardText}>{genres[8]}</Text>
-          </TouchableOpacity>
-        </View>
+        ))}
       </View>
 
       <TouchableOpacity
@@ -205,17 +128,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 2,
-  },
-  row: {
+    flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 5,
-  },
-  centeredRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginVertical: 5,
-    width: '100%', // Ensuring the row takes full width
   },
   card: {
     backgroundColor: "#494949",
@@ -225,7 +140,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 80,
-    width: "48%", // Adjusting width to fit two cards side by side
+    width: "48%",
     borderWidth: 1,
     borderColor: "#ffffff",
     shadowColor: "#000",
