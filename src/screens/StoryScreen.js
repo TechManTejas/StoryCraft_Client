@@ -8,8 +8,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import ChapterDetails from "./ChapterDetails";
-import { api } from "../api"; 
+import { api } from "../api";
 
+// Mapping of genres to their colors
 const genreColors = {
   Action: "red",
   Animation: "orange",
@@ -22,38 +23,32 @@ const genreColors = {
   Horror: "black",
 };
 
-const StoryScreen = ({ token }) => {
-  const [genres, setGenres] = useState([]);
+const StoryScreen = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [showChapterDetails, setShowChapterDetails] = useState(false);
+  const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchGenres = async () => {
-      try {
-        console.log("Token received in StoryScreen:", token); // Debugging line
-        const response = await api.fetchGenres(token);
-
-        if (response.isSuccess) {
-          setGenres(response.genres);
-        } else {
-          console.error("Failed to fetch genres", response.message);
-        }
-      } catch (error) {
-        console.error("Error fetching genres:", error);
-      } finally {
-        setLoading(false);
+      const response = await api.getGenres();
+      if (response.isSuccess) {
+        setGenres(response.genres);
+      } else {
+        // Handle error
+        console.error(response.message);
       }
+      setLoading(false);
     };
 
     fetchGenres();
-  }, [token]);
+  }, []);
 
   const handleGenrePress = (genre) => {
     if (selectedGenre === genre) {
-      setSelectedGenre(null);
+      setSelectedGenre(null); // Deselect if the same genre is clicked again
     } else {
-      setSelectedGenre(genre);
+      setSelectedGenre(genre); // Select the new genre
     }
   };
 
@@ -71,8 +66,8 @@ const StoryScreen = ({ token }) => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#ffffff" />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#fff" />
       </View>
     );
   }
@@ -85,19 +80,23 @@ const StoryScreen = ({ token }) => {
           selectedGenre && { borderColor: genreColors[selectedGenre] },
         ]}
       >
-        {genres.map((genre) => (
-          <TouchableOpacity
+        {genres.map((genre, index) => (
+          <View
             key={genre.id}
-            style={[
-              styles.card,
-              selectedGenre === genre.name
-                ? { backgroundColor: genreColors[genre.name] }
-                : {},
-            ]}
-            onPress={() => handleGenrePress(genre.name)}
+            style={index % 2 === 0 ? styles.row : styles.centeredRow}
           >
-            <Text style={styles.cardText}>{genre.name}</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.card,
+                selectedGenre === genre.name
+                  ? { backgroundColor: genreColors[genre.name] }
+                  : {},
+              ]}
+              onPress={() => handleGenrePress(genre.name)}
+            >
+              <Text style={styles.cardText}>{genre.name}</Text>
+            </TouchableOpacity>
+          </View>
         ))}
       </View>
 
@@ -118,6 +117,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#242424",
     padding: 10,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#242424",
+  },
   borderedContainer: {
     marginTop: 20,
     borderWidth: 1,
@@ -128,9 +133,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 2,
-    flexWrap: "wrap",
+  },
+  row: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginVertical: 5,
+  },
+  centeredRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginVertical: 5,
+    width: "100%", // Ensuring the row takes full width
   },
   card: {
     backgroundColor: "#494949",
@@ -140,7 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 80,
-    width: "48%",
+    width: "48%", // Adjusting width to fit two cards side by side
     borderWidth: 1,
     borderColor: "#ffffff",
     shadowColor: "#000",

@@ -24,11 +24,12 @@ const SignupScreen = ({ navigation }) => {
   const handleSignup = async () => {
     const data = await api.signUp(username, password);
 
-    if (data.isSuccess)
-      AsyncStorage.setItem("userToken", data.token).then(() => {
-        navigation.navigate("BottomTabNavigator");
-      });
-    else console.log(JSON.stringify(data, null, 1));
+    if (data.isSuccess) {
+      await AsyncStorage.setItem("userToken", data.token);
+      navigation.navigate("BottomTabNavigator");
+    } else {
+      console.log(JSON.stringify(data, null, 1));
+    }
   };
 
   return (
@@ -39,7 +40,6 @@ const SignupScreen = ({ navigation }) => {
             Create New Account
           </Heading>
           <VStack space="xs">
-            <Text color="$text500" lineHeight="$xs" style={styles.label}></Text>
             <Input variant="underlined">
               <InputField
                 placeholder="Username"
@@ -50,7 +50,6 @@ const SignupScreen = ({ navigation }) => {
             </Input>
           </VStack>
           <VStack space="xs">
-            <Text color="$text500" lineHeight="$xs" style={styles.label}></Text>
             <Input textAlign="center" variant="underlined">
               <InputField
                 placeholder="Password"
@@ -102,19 +101,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: "#8D8D8D",
     backgroundColor: "#242424",
-    shadowColor: "#ffffff", // Shadow color
-    shadowOffset: { width: 4, height: 10 }, // Offset for shadow
-    shadowOpacity: 0.8, // Opacity for shadow
-    shadowRadius: 10, // Blur radius for shadow
-    elevation: 10, // Android shadow
+    shadowColor: "#ffffff",
+    shadowOffset: { width: 4, height: 10 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    elevation: 10,
   },
   heading: {
     color: "#ffffff",
-    textAlign: "center", // Center the heading
-    marginBottom: 20, // Add some margin to the bottom
-  },
-  label: {
-    color: "#ffffff",
+    textAlign: "center",
+    marginBottom: 20,
   },
   inputField: {
     color: "#ffffff",
@@ -123,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     width: "100%",
-    marginBottom: 10, // Add margin bottom to give space for the login link
+    marginBottom: 10,
   },
   signupButton: {
     alignSelf: "center",
@@ -132,7 +128,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    // elevation: 5,
   },
   loginLink: {
     color: "#ffffff",
