@@ -55,4 +55,18 @@ export const api = {
       return { isSuccess: false, message: err.message };
     }
   },
+
+  generateStory: async (genre_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/stories/generate_story/",
+        { genre_id },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) return { isSuccess: true, story: res.data.response };
+    } catch (err) {
+      return { isSuccess: false, message: err.message };
+    }
+  },
 };

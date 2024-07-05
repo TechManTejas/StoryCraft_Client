@@ -10,7 +10,6 @@ import {
 import ChapterDetails from "./ChapterDetails";
 import { api } from "../api";
 
-// Mapping of genres to their colors
 const genreColors = {
   Action: "red",
   Animation: "orange",
@@ -35,7 +34,6 @@ const StoryScreen = () => {
       if (response.isSuccess) {
         setGenres(response.genres);
       } else {
-        // Handle error
         console.error(response.message);
       }
       setLoading(false);
@@ -46,9 +44,9 @@ const StoryScreen = () => {
 
   const handleGenrePress = (genre) => {
     if (selectedGenre === genre) {
-      setSelectedGenre(null); // Deselect if the same genre is clicked again
+      setSelectedGenre(null);
     } else {
-      setSelectedGenre(genre); // Select the new genre
+      setSelectedGenre(genre);
     }
   };
 
@@ -60,15 +58,21 @@ const StoryScreen = () => {
     // Handle "Let's Twist the Journey" action here
   };
 
-  if (showChapterDetails) {
-    return <ChapterDetails handleLetsTwistPress={handleLetsTwistPress} />;
-  }
-
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#fff" />
       </View>
+    );
+  }
+
+  if (showChapterDetails) {
+    const selectedGenreObject = genres.find((genre) => genre.name === selectedGenre);
+    return (
+      <ChapterDetails
+        route={{ params: { genre_id: selectedGenreObject.id } }}
+        handleLetsTwistPress={handleLetsTwistPress}
+      />
     );
   }
 
@@ -143,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     marginVertical: 5,
-    width: "100%", // Ensuring the row takes full width
+    width: "100%",
   },
   card: {
     backgroundColor: "#494949",
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 80,
-    width: "48%", // Adjusting width to fit two cards side by side
+    width: "48%",
     borderWidth: 1,
     borderColor: "#ffffff",
     shadowColor: "#000",
