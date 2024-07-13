@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import UpdatedStoryScreen from "./UpdatedStoryScreen";
-import { api } from "../api"; // Import the updated API module
+import { api } from "../api";
 
 const ChapterDetails = ({ route }) => {
-  const { genre_id } = route.params; // Get the genre_id from the previous screen
+  const { genre_id } = route.params;
 
   const [chapterName, setChapterName] = useState("");
   const [characterName, setCharacterName] = useState("");
@@ -18,24 +12,42 @@ const ChapterDetails = ({ route }) => {
   const [showSituations, setShowSituations] = useState(false);
   const [selectedSituation, setSelectedSituation] = useState(null);
   const [showUpdatedStory, setShowUpdatedStory] = useState(false);
-
-  const situation1 =
-    "In the heart of an ancient temple, Alden confronts a shadowy figure who claims to know his secret.";
-  const situation2 =
-    "As he delves deeper into the relic's origins, Alden stumbles upon a forgotten city hidden beneath the sands of time.";
+  const [situation1, setSituation1] = useState("");
+  const [situation2, setSituation2] = useState("");
 
   useEffect(() => {
     const fetchChapterDetails = async () => {
-      const res = await api.generateStory(genre_id);
-      if (res.isSuccess) {
-        setChapterName(res.story.title);
-        setCharacterName(res.story.characters[0].name);
-        setStoryBeginning(
-          `A group of elite operatives embark on a high-stakes mission to neutralize a ruthless terrorist organization threatening global security.`
-        );
-      } else {
-        // Handle error
-        console.log(res.message);
+      try {
+        const storyRes = await api.generateStory(genre_id);
+        console.log("Story Response:", storyRes);
+        if (storyRes.isSuccess) {
+          const story = storyRes.story;
+          setChapterName(story.title);
+          setCharacterName(story.characters[0]?.name || ""); 
+
+          const saveStoryRes = await api.saveStory(story);
+          console.log("Save Story Response:", saveStoryRes);
+          if (saveStoryRes.isSuccess) {
+            const storyId = saveStoryRes.storyId;
+
+            const sceneRes = await api.getScenes(storyId);
+            console.log("Scene Response:", sceneRes);
+            if (sceneRes.isSuccess) {
+              const scene = sceneRes.scene[0]; // Make sure to get the first scene if there are multiple
+              setStoryBeginning(scene.text);
+              setSituation1(scene.choice_1);
+              setSituation2(scene.choice_2);
+            } else {
+              console.log("Error fetching scenes:", sceneRes.message);
+            }
+          } else {
+            console.log("Error saving story:", saveStoryRes.message);
+          }
+        } else {
+          console.log("Error generating story:", storyRes.message);
+        }
+      } catch (error) {
+        console.log("Error fetching chapter details:", error.message);
       }
     };
 
@@ -138,106 +150,63 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginVertical: 10,
-    color: "#b6b6b6",
-    textAlign: "center",
+    fontSize: 18,
+    color: "#dbdbdb",
+    marginBottom: 10,
   },
   detailContainer: {
-    marginTop: 15,
-    backgroundColor: "#242424",
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 10,
-    borderWidth: 2,
-    borderColor: "#FFFFFF",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    marginBottom: 20,
   },
   detailTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#929292",
+    fontSize: 16,
+    color: "#b6b6b6",
+    marginBottom: 5,
   },
   detailText: {
-    fontSize: 16,
-    marginVertical: 5,
-    color: "#6d6d6d",
+    fontSize: 14,
+    color: "#dbdbdb",
   },
   letsGoButton: {
-    backgroundColor: "#494949",
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: "#6d6d6d",
+    padding: 10,
     alignItems: "center",
-    marginVertical: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    borderRadius: 5,
+    marginBottom: 20,
   },
   letsGoButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "bold",
+    color: "#dbdbdb",
+    fontSize: 16,
   },
   situationsContainer: {
-    backgroundColor: "#242424",
-    padding: 15,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: "#FFFFFF",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
     marginBottom: 20,
   },
   situationBox: {
-    backgroundColor: "#6d6d6d",
+    backgroundColor: "#494949",
     padding: 10,
-    borderRadius: 10,
-    marginVertical: 5,
-  },
-  selectedBox: {
-    backgroundColor: "#dbdbdb",
-    borderWidth: 2,
-    borderColor: "#FFFFFF",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    borderRadius: 5,
+    marginBottom: 10,
   },
   situationText: {
-    fontSize: 16,
-    color: "#242424",
+    color: "#dbdbdb",
+    fontSize: 14,
+  },
+  selectedBox: {
+    borderColor: "#dbdbdb",
+    borderWidth: 1,
   },
   selectedText: {
-    fontWeight: "bold",
     color: "#242424",
   },
   updateButton: {
-    backgroundColor: "#242424",
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: "#6d6d6d",
+    padding: 10,
     alignItems: "center",
-    marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    borderRadius: 5,
+    marginTop: 20,
   },
   updateButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "bold",
+    color: "#dbdbdb",
+    fontSize: 16,
   },
 });
 

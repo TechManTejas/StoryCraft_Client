@@ -28,7 +28,7 @@ export const api = {
         return { isSuccess: true, token: res.data.token };
       }
     } catch (err) {
-      return { isSuccess: false, message: err.message };
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
 
@@ -40,7 +40,7 @@ export const api = {
         return { isSuccess: true, token: res.data.token };
       }
     } catch (err) {
-      return { isSuccess: false, message: err.message };
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
 
@@ -52,7 +52,7 @@ export const api = {
       });
       if (res.data) return { isSuccess: true, genres: res.data };
     } catch (err) {
-      return { isSuccess: false, message: err.message };
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
 
@@ -66,7 +66,34 @@ export const api = {
       );
       if (res.data) return { isSuccess: true, story: res.data.response };
     } catch (err) {
-      return { isSuccess: false, message: err.message };
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  saveStory: async (story) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/stories/",
+        story,
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) return { isSuccess: true, storyId: res.data.id };
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getScenes: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/scenes/", {
+        params: { story_id },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) return { isSuccess: true, scene: res.data };
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
 };
