@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import ChapterDetails from "./ChapterDetails";
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 import { api } from "../api";
 
 const genreColors = {
@@ -24,9 +24,10 @@ const genreColors = {
 
 const StoryScreen = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
-  const [showChapterDetails, setShowChapterDetails] = useState(false);
   const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigation = useNavigation(); // Hook to get navigation prop
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -51,11 +52,12 @@ const StoryScreen = () => {
   };
 
   const handleLetsGoPress = () => {
-    setShowChapterDetails(true);
-  };
-
-  const handleLetsTwistPress = () => {
-    // Handle "Let's Twist the Journey" action here
+    const selectedGenreObject = genres.find((genre) => genre.name === selectedGenre);
+    if (selectedGenreObject) {
+      navigation.navigate("ChapterDetails", {
+        genre_id: selectedGenreObject.id,
+      });
+    }
   };
 
   if (loading) {
@@ -63,16 +65,6 @@ const StoryScreen = () => {
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#fff" />
       </View>
-    );
-  }
-
-  if (showChapterDetails) {
-    const selectedGenreObject = genres.find((genre) => genre.name === selectedGenre);
-    return (
-      <ChapterDetails
-        route={{ params: { genre_id: selectedGenreObject.id } }}
-        handleLetsTwistPress={handleLetsTwistPress}
-      />
     );
   }
 

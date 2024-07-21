@@ -96,4 +96,20 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+  updateScene: async (story_id, scene_id, choice) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post("/scenes/", {
+        story_id,
+        scene_id,
+        choice,
+      }, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) return { isSuccess: true, updatedScene: res.data };
+    } catch (err) {
+      console.log("Error updating story:", err.response ? err.response.data : err.message);
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };

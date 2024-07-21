@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import UpdatedStoryScreen from "./UpdatedStoryScreen";
+import Honeycomb from "../components/LoadingComponent"; // Import the Honeycomb component
 import { api } from "../api";
 
-const ChapterDetails = ({ route }) => {
+const ChapterDetails = ({ route, navigation }) => {
   const { genre_id } = route.params;
 
   const [chapterName, setChapterName] = useState("");
@@ -11,30 +11,32 @@ const ChapterDetails = ({ route }) => {
   const [storyBeginning, setStoryBeginning] = useState("");
   const [showSituations, setShowSituations] = useState(false);
   const [selectedSituation, setSelectedSituation] = useState(null);
-  const [showUpdatedStory, setShowUpdatedStory] = useState(false);
   const [situation1, setSituation1] = useState("");
   const [situation2, setSituation2] = useState("");
+  const [storyId, setStoryId] = useState(null);
+  const [sceneId, setSceneId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchChapterDetails = async () => {
       try {
         const storyRes = await api.generateStory(genre_id);
-        console.log("Story Response:", storyRes);
         if (storyRes.isSuccess) {
           const story = storyRes.story;
           setChapterName(story.title);
-          setCharacterName(story.characters[0]?.name || ""); 
+          setCharacterName(story.characters[0]?.name || "");
+          setStoryBeginning(story.beginning);
 
           const saveStoryRes = await api.saveStory(story);
-          console.log("Save Story Response:", saveStoryRes);
           if (saveStoryRes.isSuccess) {
             const storyId = saveStoryRes.storyId;
+            setStoryId(storyId);
 
             const sceneRes = await api.getScenes(storyId);
-            console.log("Scene Response:", sceneRes);
             if (sceneRes.isSuccess) {
-              const scene = sceneRes.scene[0]; // Make sure to get the first scene if there are multiple
+              const scene = sceneRes.scene[0];
               setStoryBeginning(scene.text);
+              setSceneId(scene.id);
               setSituation1(scene.choice_1);
               setSituation2(scene.choice_2);
             } else {
@@ -48,6 +50,8 @@ const ChapterDetails = ({ route }) => {
         }
       } catch (error) {
         console.log("Error fetching chapter details:", error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -55,19 +59,20 @@ const ChapterDetails = ({ route }) => {
   }, [genre_id]);
 
   const handleUpdateStoryPress = () => {
-    setShowUpdatedStory(true);
+    navigation.navigate("UpdatedStoryScreen", {
+      storyId,
+      sceneId,
+      storyBeginning,
+      situation1,
+      situation2,
+    });
   };
 
-  if (showUpdatedStory) {
+  if (isLoading) {
     return (
-      <UpdatedStoryScreen
-        storyBeginning={storyBeginning}
-        selectedSituation={selectedSituation}
-        situation1={situation1}
-        situation2={situation2}
-        setShowUpdatedStory={setShowUpdatedStory}
-        setSelectedSituation={setSelectedSituation}
-      />
+      <View style={styles.loadingContainer}>
+        <Honeycomb />
+      </View>
     );
   }
 
@@ -144,6 +149,12 @@ const ChapterDetails = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#242424",
+  },
   content: {
     flex: 1,
     backgroundColor: "#242424",
@@ -159,18 +170,18 @@ const styles = StyleSheet.create({
   },
   detailTitle: {
     fontSize: 16,
-    color: "#b6b6b6",
+    color: "#dbdbdb",
     marginBottom: 5,
   },
   detailText: {
     fontSize: 14,
-    color: "#dbdbdb",
+    color: "#b6b6b6",
   },
   letsGoButton: {
-    backgroundColor: "#6d6d6d",
-    padding: 10,
+    backgroundColor: "#f60b0e",
+    padding: 15,
+    borderRadius: 10,
     alignItems: "center",
-    borderRadius: 5,
     marginBottom: 20,
   },
   letsGoButtonText: {
@@ -178,12 +189,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   situationsContainer: {
-    marginBottom: 20,
+    backgroundColor: "#323232",
+    padding: 15,
+    borderRadius: 10,
   },
   situationBox: {
     backgroundColor: "#494949",
-    padding: 10,
-    borderRadius: 5,
+    padding: 15,
+    borderRadius: 10,
     marginBottom: 10,
   },
   situationText: {
@@ -191,18 +204,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   selectedBox: {
-    borderColor: "#dbdbdb",
-    borderWidth: 1,
+    backgroundColor: "#f60b0e",
   },
   selectedText: {
     color: "#242424",
   },
   updateButton: {
-    backgroundColor: "#6d6d6d",
-    padding: 10,
+    backgroundColor: "#f60b0e",
+    padding: 15,
+    borderRadius: 10,
     alignItems: "center",
-    borderRadius: 5,
-    marginTop: 20,
+    marginTop: 10,
   },
   updateButtonText: {
     color: "#dbdbdb",
