@@ -12,10 +12,10 @@ const StoryCard = ({ title, author, description, image }) => {
 
   return (
     <Card style={styles.card}>
-      <Image
-        style={styles.image}
-        source={image} // Corrected to use required local asset
-      />
+      <View style={styles.overlay}>
+        <Text style={styles.comingSoonText}>Coming Soon</Text>
+      </View>
+      <Image style={styles.image} source={image} />
       <Text style={styles.date}></Text>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description}>{description}</Text>
@@ -23,9 +23,9 @@ const StoryCard = ({ title, author, description, image }) => {
         <Text style={styles.author}>{author}</Text>
         <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
           <FontAwesome
-            name={liked? "heart" : "heart-o"}
+            name={liked ? "heart" : "heart-o"}
             size={24}
-            color={liked? "#f60b0e" : "#929292"}
+            color={liked ? "#f60b0e" : "#929292"}
           />
         </TouchableOpacity>
       </View>
@@ -39,11 +39,28 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     maxWidth: 360,
     margin: 12,
-    backgroundColor: "#2d2d2d",
+    backgroundColor: "rgba(45, 45, 45, 0.8)", // Reduced opacity
     shadowColor: "#fff",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
+    position: "relative", // To allow overlay positioning
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1, // Ensure overlay is on top
+  },
+  comingSoonText: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   image: {
     height: 240,

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import StoryCard from "../components/StoryCard";
 
-// Adjusted stories array with local asset paths
+
 const stories = [
   {
     id: "1",
