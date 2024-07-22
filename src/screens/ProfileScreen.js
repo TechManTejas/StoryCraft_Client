@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from "react-native";
+import { api } from "../api"; // Ensure this path is correct
 
 // Import images from assets
 const book1 = require('../../assets/images/story1.jpeg');
@@ -21,12 +22,10 @@ const ProfileScreen = ({ navigation }) => {
   ]);
 
   useEffect(() => {
-    // Fetch user details and books written by the user (mock data for example)
     fetchUserData();
   }, []);
 
   const fetchUserData = async () => {
-    // Fetch user details from AsyncStorage or any other data source
     try {
       const storedUsername = await AsyncStorage.getItem("username");
       if (storedUsername) {
@@ -47,6 +46,8 @@ const ProfileScreen = ({ navigation }) => {
   const handleLogout = () => {
     AsyncStorage.removeItem("token").then(() => {
       navigation.navigate("SignupScreen");
+    }).catch(error => {
+      console.error("Error removing token:", error);
     });
   };
 
@@ -60,7 +61,7 @@ const ProfileScreen = ({ navigation }) => {
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel"
         },
-        { text: "Yes", onPress: () => deleteAccount() }
+        { text: "Yes", onPress: deleteAccount }
       ],
       { cancelable: false }
     );
@@ -68,15 +69,21 @@ const ProfileScreen = ({ navigation }) => {
 
   const deleteAccount = async () => {
     try {
-      // Perform delete account logic here, such as calling an API to delete the account
+      // Attempt to delete the account
+      await api.deleteAccount();
+      // Clear AsyncStorage and navigate to SignupScreen if deletion is successful
       await AsyncStorage.clear();
       navigation.navigate("SignupScreen");
     } catch (error) {
-      console.error("Error deleting account:", error);
+      // Log the error for debugging purposes
+  
+      // Clear AsyncStorage and navigate to SignupScreen even if there's an error
+      await AsyncStorage.clear();
+      navigation.navigate("SignupScreen");
     }
   };
+  
 
-  // Render book cards
   const renderBookCard = ({ item }) => (
     <View style={styles.bookCard}>
       <Image source={item.image} style={styles.bookImage} />

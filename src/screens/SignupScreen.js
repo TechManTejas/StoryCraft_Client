@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import {
   Button,
@@ -11,27 +11,55 @@ import { EyeIcon, EyeOffIcon } from "lucide-react-native";
 import { FormControl, VStack, Heading, ButtonText } from "@gluestack-ui/themed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../api";
+import { useFocusEffect } from '@react-navigation/native';
 
 const SignupScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
+  // Toggle password visibility
   const handleState = () => {
     setShowPassword((showState) => !showState);
   };
 
+  // Handle signup logic
   const handleSignup = async () => {
-    const data = await api.signUp(username, password);
+    try {
+      const data = await api.signUp(username, password);
 
-    if (data.isSuccess) {
-      await AsyncStorage.setItem("userToken", data.token);
-      await AsyncStorage.setItem("username", username); // Store the username in AsyncStorage
-      navigation.navigate("BottomTabNavigator");
-    } else {
-      console.log(JSON.stringify(data, null, 1));
+      if (data.isSuccess) {
+        await AsyncStorage.setItem("userToken", data.token);
+        await AsyncStorage.setItem("username", username);
+        navigation.navigate("BottomTabNavigator");
+      } else {
+        // Set error message based on the response
+        if (data.message === "User already exists") {
+          setErrorMessage("User already exists. Please try a different username.");
+        } else {
+          setErrorMessage("Signup failed. Please try again.");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setErrorMessage("An unexpected error occurred. Please try again.");
     }
   };
+
+  // Function to handle input focus to clear error message
+  const handleFocus = () => {
+    setErrorMessage(""); // Clear error message on input focus
+  };
+
+  // Reset state on screen focus
+  useFocusEffect(
+    useCallback(() => {
+      setUsername("");
+      setPassword("");
+      setErrorMessage("");
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -40,8 +68,11 @@ const SignupScreen = ({ navigation }) => {
           <Heading color="$text900" lineHeight="$md" style={styles.heading}>
             Create New Account
           </Heading>
+          {errorMessage ? (
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
+          ) : null}
           <VStack space="xs">
-            <Input variant="underlined">
+            <Input variant="underlined" onFocus={handleFocus}>
               <InputField
                 placeholder="Username"
                 value={username}
@@ -51,7 +82,7 @@ const SignupScreen = ({ navigation }) => {
             </Input>
           </VStack>
           <VStack space="xs">
-            <Input textAlign="center" variant="underlined">
+            <Input textAlign="center" variant="underlined" onFocus={handleFocus}>
               <InputField
                 placeholder="Password"
                 value={password}
@@ -138,6 +169,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#ffffff",
+  },
+  errorMessage: {
+    color: "#ff4d4d",
+    textAlign: "center",
+    marginBottom: 10,
   },
 });
 

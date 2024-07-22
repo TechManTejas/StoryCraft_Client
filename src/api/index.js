@@ -112,4 +112,18 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+  deleteAccount : async () => {
+    
+      const token = await getAuthToken();
+      const res = await axiosInstance.post("/delete-account/", {}, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      
+      if (res.data) {
+        return { isSuccess: true };
+      } else {
+        return { isSuccess: false, message: "No data in response" };
+      }
+    
+  },
 };

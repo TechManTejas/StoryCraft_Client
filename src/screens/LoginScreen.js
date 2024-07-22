@@ -10,12 +10,15 @@ import {
 import { EyeIcon, EyeOffIcon } from "lucide-react-native";
 import { FormControl, VStack, Heading, ButtonText } from "@gluestack-ui/themed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { api } from "../api";
+import { api } from "../api"; // Assuming this is correctly imported
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [inputTouched, setInputTouched] = useState(false); // New state variable
 
   const handleState = () => {
     setShowPassword((showState) => !showState);
@@ -29,19 +32,40 @@ const LoginScreen = ({ navigation }) => {
       await AsyncStorage.setItem("username", username); 
       navigation.navigate("BottomTabNavigator");
     } else {
+      if (!data.userFound) {
+        setUsernameError("No user found. Please sign up.");
+      } else {
+        setPasswordError("Incorrect password. Please try again.");
+      }
       console.log(JSON.stringify(data, null, 1));
     }
   };
 
+  // Function to handle input focus to reset errors
+  const handleFocus = () => {
+    setInputTouched(true);
+    setUsernameError(""); // Reset username error
+    setPasswordError(""); // Reset password error
+  };
+
   return (
     <View style={styles.container}>
+      {/* Sample Credentials Box */}
+      <View style={styles.credentialsBox}>
+        <Text style={styles.credentialsHeading}>
+          Sample Credentials for Google Play Review
+        </Text>
+        <Text style={styles.credentialsText}>Username: arjun</Text>
+        <Text style={styles.credentialsText}>Password: arjun</Text>
+      </View>
+
       <FormControl style={styles.formControl}>
         <VStack space="xl">
           <Heading color="$text900" lineHeight="$md" style={styles.heading}>
             Login
           </Heading>
           <VStack space="xs">
-            <Input variant="underlined">
+            <Input variant="underlined" onFocus={handleFocus}>
               <InputField
                 placeholder="Username"
                 value={username}
@@ -49,9 +73,10 @@ const LoginScreen = ({ navigation }) => {
                 style={styles.inputField}
               />
             </Input>
+            {(usernameError || inputTouched) && <Text style={styles.errorText}>{usernameError}</Text>}
           </VStack>
           <VStack space="xs">
-            <Input textAlign="center" variant="underlined">
+            <Input textAlign="center" variant="underlined" onFocus={handleFocus}>
               <InputField
                 placeholder="Password"
                 value={password}
@@ -66,6 +91,7 @@ const LoginScreen = ({ navigation }) => {
                 />
               </InputSlot>
             </Input>
+            {(passwordError || inputTouched) && <Text style={styles.errorText}>{passwordError}</Text>}
           </VStack>
           <View style={styles.buttonContainer}>
             <Button
@@ -94,6 +120,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     backgroundColor: "#242424",
+  },
+  credentialsBox: {
+    padding: 16,
+    width: 350,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: "#8B0000",
+    backgroundColor: "#2a2a2a", // Slightly different color for distinction
+    marginBottom: 20,
+    shadowColor: "#8B0000",
+    shadowOffset: { width: 4, height: 10 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  credentialsHeading: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontSize: 16,
+    marginBottom: 5,
+    fontWeight: "bold",
+  },
+  credentialsText: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontSize: 14,
   },
   formControl: {
     padding: 16,
@@ -138,6 +190,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#ffffff",
+  },
+  errorText: {
+    color: "#ff0000", // Error message text color
+    fontSize: 14,
+    marginTop: 5,
   },
 });
 
