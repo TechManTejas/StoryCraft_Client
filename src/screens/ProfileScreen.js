@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { View, Button, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from "react-native";
 
 // Import images from assets
 const book1 = require('../../assets/images/story1.jpeg');
@@ -10,7 +10,7 @@ const book4 = require('../../assets/images/story7.jpeg');
 const book5 = require('../../assets/images/story14.jpg');
 
 const ProfileScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("Bill Watts");
+  const [username, setUsername] = useState("");
   const [bio, setBio] = useState("Passionate writer and developer");
   const [books, setBooks] = useState([
     { name: "Book 1", image: book1 },
@@ -28,9 +28,10 @@ const ProfileScreen = ({ navigation }) => {
   const fetchUserData = async () => {
     // Fetch user details from AsyncStorage or any other data source
     try {
-      // Replace with actual AsyncStorage.getItem calls if needed
-      setUsername("Bill Watts");
-      setBio("Passionate writer and developer");
+      const storedUsername = await AsyncStorage.getItem("username");
+      if (storedUsername) {
+        setUsername(storedUsername);
+      }
       setBooks([
         { name: "The Epistle to the Colossians", image: book1 },
         { name: "The Book of Acts", image: book2 },
@@ -47,6 +48,32 @@ const ProfileScreen = ({ navigation }) => {
     AsyncStorage.removeItem("token").then(() => {
       navigation.navigate("SignupScreen");
     });
+  };
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account?",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Yes", onPress: () => deleteAccount() }
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const deleteAccount = async () => {
+    try {
+      // Perform delete account logic here, such as calling an API to delete the account
+      await AsyncStorage.clear();
+      navigation.navigate("SignupScreen");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    }
   };
 
   // Render book cards
@@ -73,6 +100,9 @@ const ProfileScreen = ({ navigation }) => {
       />
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAccount}>
+        <Text style={styles.deleteButtonText}>Delete Account</Text>
       </TouchableOpacity>
     </View>
   );
@@ -156,6 +186,25 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   logoutButtonText: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  deleteButton: {
+    backgroundColor: "#8B0000",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginVertical: 20,
+    borderWidth: 1,
+    borderColor: "#FFFFFF",
+    shadowColor: "#FFFFFF",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  deleteButtonText: {
     color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "bold",

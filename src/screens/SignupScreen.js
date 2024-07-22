@@ -26,6 +26,7 @@ const SignupScreen = ({ navigation }) => {
 
     if (data.isSuccess) {
       await AsyncStorage.setItem("userToken", data.token);
+      await AsyncStorage.setItem("username", username); // Store the username in AsyncStorage
       navigation.navigate("BottomTabNavigator");
     } else {
       console.log(JSON.stringify(data, null, 1));

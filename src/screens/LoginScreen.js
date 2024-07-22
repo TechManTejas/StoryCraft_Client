@@ -26,6 +26,7 @@ const LoginScreen = ({ navigation }) => {
 
     if (data.isSuccess) {
       await AsyncStorage.setItem("userToken", data.token);
+      await AsyncStorage.setItem("username", username); 
       navigation.navigate("BottomTabNavigator");
     } else {
       console.log(JSON.stringify(data, null, 1));
