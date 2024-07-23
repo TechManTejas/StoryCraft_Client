@@ -7,8 +7,8 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 import StoryCard from "../components/StoryCard";
-
 
 const stories = [
   {
@@ -32,12 +32,18 @@ const stories = [
     title: "The Enchanted Forest",
     author: "Amani Blanchett",
     description:
-     "The Enchanted Forest is a mystical realm filled with magical creatures, ancient trees, and hidden pathways, where every leaf whispers tales of forgotten kingdoms and the guardians who protect its secrets.",
+      "The Enchanted Forest is a mystical realm filled with magical creatures, ancient trees, and hidden pathways, where every leaf whispers tales of forgotten kingdoms and the guardians who protect its secrets.",
     image: require("../../assets/images/story1.jpeg"), // Local asset path
   },
 ];
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+
+  const handleStartJourney = () => {
+    navigation.navigate("StoryScreen");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Featured Stories</Text>
@@ -54,7 +60,10 @@ const HomeScreen = () => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.contentContainer}
         ListFooterComponent={
-          <TouchableOpacity style={styles.startButton}>
+          <TouchableOpacity 
+            style={styles.startButton}
+            onPress={handleStartJourney}
+          >
             <Text style={styles.startButtonText}>Start Your Journey</Text>
           </TouchableOpacity>
         }
