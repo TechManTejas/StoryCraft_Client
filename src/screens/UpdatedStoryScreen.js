@@ -9,23 +9,33 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
   const [nextSituation1, setNextSituation1] = useState(situation1);
   const [nextSituation2, setNextSituation2] = useState(situation2);
   const [selectedNextSituation, setSelectedNextSituation] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(""); // State for error message
 
   const handleUpdateStory = async () => {
     if (!selectedNextSituation) return;
 
+    let choiceText;
+    if (selectedNextSituation === "nextSituation1") {
+      choiceText = nextSituation1;
+    } else if (selectedNextSituation === "nextSituation2") {
+      choiceText = nextSituation2;
+    }
+
     try {
-      // Use updateScene instead of updateStory
-      const sceneRes = await api.updateScene(storyId, sceneId, selectedNextSituation);
+      const sceneRes = await api.updateScene(storyId, sceneId, choiceText);
 
       if (sceneRes.isSuccess) {
-        setUpdatedStory(sceneRes.updatedScene.updatedStory);
-        setNextSituation1(sceneRes.updatedScene.nextSituation1);
-        setNextSituation2(sceneRes.updatedScene.nextSituation2);
+        setUpdatedStory(sceneRes.updatedScene.text);
+        setNextSituation1(sceneRes.updatedScene.choice_1);
+        setNextSituation2(sceneRes.updatedScene.choice_2);
+        setErrorMessage(""); // Clear error message if successful
       } else {
         console.log("Error updating story:", sceneRes.message);
+        setErrorMessage("Coming soon"); // Set error message
       }
     } catch (error) {
       console.log("Error updating story:", error.message);
+      setErrorMessage("Coming soon"); // Set error message
     }
   };
 
@@ -48,7 +58,7 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
             selectedNextSituation === "nextSituation1" && styles.selectedText,
           ]}
         >
-          Next Situation 1: {nextSituation1}
+         {nextSituation1}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -64,7 +74,7 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
             selectedNextSituation === "nextSituation2" && styles.selectedText,
           ]}
         >
-          Next Situation 2: {nextSituation2}
+          {nextSituation2}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -77,6 +87,11 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
       >
         <Text style={styles.updateButtonText}>Update the Story</Text>
       </TouchableOpacity>
+      {errorMessage ? (
+        <View style={styles.errorBox}>
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+      ) : null}
     </ScrollView>
   );
 };
@@ -126,6 +141,17 @@ const styles = StyleSheet.create({
   updateButtonText: {
     color: "#dbdbdb",
     fontSize: 16,
+  },
+  errorBox: {
+    backgroundColor: "#ff4d4d",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  errorText: {
+    color: "#ffffff",
+    fontSize: 14,
+    textAlign: "center",
   },
 });
 

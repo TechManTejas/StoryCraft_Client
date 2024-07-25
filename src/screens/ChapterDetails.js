@@ -21,6 +21,7 @@ const ChapterDetails = ({ route, navigation }) => {
     const fetchChapterDetails = async () => {
       try {
         const storyRes = await api.generateStory(genre_id);
+        console.log("Story Response:", storyRes); // Print the story response
         if (storyRes.isSuccess) {
           const story = storyRes.story;
           setChapterName(story.title);
@@ -28,11 +29,13 @@ const ChapterDetails = ({ route, navigation }) => {
           setStoryBeginning(story.beginning);
 
           const saveStoryRes = await api.saveStory(story);
+          console.log("Save Story Response:", saveStoryRes); // Print the save story response
           if (saveStoryRes.isSuccess) {
             const storyId = saveStoryRes.storyId;
             setStoryId(storyId);
 
             const sceneRes = await api.getScenes(storyId);
+            console.log("Scene Response:", sceneRes); // Print the scene response
             if (sceneRes.isSuccess) {
               const scene = sceneRes.scene[0];
               setStoryBeginning(scene.text);
