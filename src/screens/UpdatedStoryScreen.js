@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { api } from "../api";
+import Honeycomb from "../components/LoadingComponent"; // Ensure the correct path to the Honeycomb component
 
 const UpdatedStoryScreen = ({ route, navigation }) => {
   const { storyId, sceneId, storyBeginning, situation1, situation2 } = route.params;
@@ -10,6 +11,8 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
   const [nextSituation2, setNextSituation2] = useState(situation2);
   const [selectedNextSituation, setSelectedNextSituation] = useState(null);
   const [errorMessage, setErrorMessage] = useState(""); // State for error message
+  const [loading, setLoading] = useState(false); // State for loading
+  const [choices, setChoices] = useState([]); // State for storing choices
 
   const handleUpdateStory = async () => {
     if (!selectedNextSituation) return;
@@ -21,14 +24,20 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
       choiceText = nextSituation2;
     }
 
+    setLoading(true); // Start loading
+
     try {
       const sceneRes = await api.updateScene(storyId, sceneId, choiceText);
 
       if (sceneRes.isSuccess) {
-        setUpdatedStory(sceneRes.updatedScene.text);
-        setNextSituation1(sceneRes.updatedScene.choice_1);
-        setNextSituation2(sceneRes.updatedScene.choice_2);
+        // Assuming the response has updatedScene array
+        const updatedScene = sceneRes.updatedScene[1]; // Get the updated scene
+        setUpdatedStory(updatedScene.text);
+        setNextSituation1(updatedScene.choice_1);
+        setNextSituation2(updatedScene.choice_2);
+        setChoices([...choices, choiceText]); // Add choice to choices state
         setErrorMessage(""); // Clear error message if successful
+        setSelectedNextSituation(null); // Reset selected situation
       } else {
         console.log("Error updating story:", sceneRes.message);
         setErrorMessage("Coming soon"); // Set error message
@@ -36,8 +45,23 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
     } catch (error) {
       console.log("Error updating story:", error.message);
       setErrorMessage("Coming soon"); // Set error message
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
+
+  const handleSaveChoices = () => {
+    // Function to save and display choices
+    Alert.alert("Choices made", `Choices made: ${choices.join(", ")}\n\nBeginning of the story: ${storyBeginning}`);
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Honeycomb color="#dbdbdb" size={72} cellSize={24} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.content}>
@@ -58,7 +82,7 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
             selectedNextSituation === "nextSituation1" && styles.selectedText,
           ]}
         >
-         {nextSituation1}
+          {nextSituation1}
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -86,6 +110,12 @@ const UpdatedStoryScreen = ({ route, navigation }) => {
         disabled={!selectedNextSituation}
       >
         <Text style={styles.updateButtonText}>Update the Story</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.saveButton}
+        onPress={handleSaveChoices}
+      >
+        <Text style={styles.saveButtonText}>Save Choices</Text>
       </TouchableOpacity>
       {errorMessage ? (
         <View style={styles.errorBox}>
@@ -142,6 +172,17 @@ const styles = StyleSheet.create({
     color: "#dbdbdb",
     fontSize: 16,
   },
+  saveButton: {
+    backgroundColor: "#6d6d6d",
+    padding: 10,
+    alignItems: "center",
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  saveButtonText: {
+    color: "#dbdbdb",
+    fontSize: 16,
+  },
   errorBox: {
     backgroundColor: "#ff4d4d",
     padding: 10,
@@ -152,6 +193,12 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 14,
     textAlign: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#242424",
   },
 });
 

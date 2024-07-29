@@ -17,47 +17,60 @@ const ChapterDetails = ({ route, navigation }) => {
   const [sceneId, setSceneId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchChapterDetails = async () => {
-      try {
-        const storyRes = await api.generateStory(genre_id);
-        console.log("Story Response:", storyRes); // Print the story response
-        if (storyRes.isSuccess) {
-          const story = storyRes.story;
-          setChapterName(story.title);
-          setCharacterName(story.characters[0]?.name || "");
-          setStoryBeginning(story.beginning);
+  const fetchChapterDetails = async (retryCount = 0) => {
+    try {
+      const storyRes = await api.generateStory(genre_id);
+      console.log("Story Response:", storyRes); // Print the story response
+      if (storyRes.isSuccess) {
+        const story = storyRes.story;
+        setChapterName(story.title);
+        setCharacterName(story.characters[0]?.name || "");
+        setStoryBeginning(story.beginning);
 
-          const saveStoryRes = await api.saveStory(story);
-          console.log("Save Story Response:", saveStoryRes); // Print the save story response
-          if (saveStoryRes.isSuccess) {
-            const storyId = saveStoryRes.storyId;
-            setStoryId(storyId);
-
-            const sceneRes = await api.getScenes(storyId);
-            console.log("Scene Response:", sceneRes); // Print the scene response
-            if (sceneRes.isSuccess) {
-              const scene = sceneRes.scene[0];
-              setStoryBeginning(scene.text);
-              setSceneId(scene.id);
-              setSituation1(scene.choice_1);
-              setSituation2(scene.choice_2);
-            } else {
-              console.log("Error fetching scenes:", sceneRes.message);
-            }
+        const saveStoryRes = await api.saveStory(story);
+        console.log("Save Story Response:", saveStoryRes); // Print the save story response
+        if (saveStoryRes.isSuccess) {
+          const storyId = saveStoryRes.storyId;
+          setStoryId(storyId);
+          console.log(storyId);
+          const sceneRes = await api.getScenes(storyId);
+          console.log("Scene Response:", sceneRes); // Print the scene response
+          if (sceneRes.isSuccess) {
+            const scene = sceneRes.scene[0];
+            setStoryBeginning(scene.text);
+            setSceneId(scene.id);
+            setSituation1(scene.choice_1);
+            setSituation2(scene.choice_2);
+            setIsLoading(false); // End loading on success
           } else {
-            console.log("Error saving story:", saveStoryRes.message);
+            console.log("Error fetching scenes:", sceneRes.message);
+            retryFetchChapterDetails(retryCount);
           }
         } else {
-          console.log("Error generating story:", storyRes.message);
+          console.log("Error saving story:", saveStoryRes.message);
+          retryFetchChapterDetails(retryCount);
         }
-      } catch (error) {
-        console.log("Error fetching chapter details:", error.message);
-      } finally {
-        setIsLoading(false);
+      } else {
+        console.log("Error generating story:", storyRes.message);
+        retryFetchChapterDetails(retryCount);
       }
-    };
+    } catch (error) {
+      console.log("Error fetching chapter details:", error.message);
+      retryFetchChapterDetails(retryCount);
+    }
+  };
 
+  const retryFetchChapterDetails = (retryCount) => {
+    if (retryCount < 5) {
+      const retryDelay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+      setTimeout(() => fetchChapterDetails(retryCount + 1), retryDelay);
+    } else {
+      console.log("Max retries reached. Unable to fetch chapter details.");
+      setIsLoading(false); // Stop loading after max retries
+    }
+  };
+
+  useEffect(() => {
     fetchChapterDetails();
   }, [genre_id]);
 
