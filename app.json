@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Frontend",
+    "name": "StoryCraft",
     "slug": "Frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,13 +18,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.tecnopolisstudio.storycraft",
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bb354b7c-9b0c-4e11-a0f1-af777b14e424"
+      }
+    }
   }
 }
