@@ -1,11 +1,12 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Animated, Easing } from "react-native";
+import { Home, BookOpen, Search, User } from "lucide-react-native";
 import HomeScreen from "../screens/HomeScreen";
 import StoryScreen from "../screens/StoryScreen";
 import ExploreScreen from "../screens/ExploreScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import { Icon } from "react-native-elements";
+import { theme } from "../constants/theme";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,49 +23,48 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          let iconName;
+        tabBarIcon: ({ color, size, focused }) => {
+          let IconComponent;
+          const iconSize = focused ? 24 : 22;
 
           if (route.name === "Home") {
-            iconName = "home";
+            IconComponent = Home;
           } else if (route.name === "Story") {
-            iconName = "book";
+            IconComponent = BookOpen;
           } else if (route.name === "Explore") {
-            iconName = "search";
+            IconComponent = Search;
           } else if (route.name === "Profile") {
-            iconName = "person";
+            IconComponent = User;
           }
 
           return (
-            <Icon name={iconName} type="material" color={color} size={size} />
+            <IconComponent 
+              size={iconSize} 
+              color={color} 
+              strokeWidth={focused ? 2.5 : 2}
+            />
           );
         },
         tabBarStyle: {
-          backgroundColor: "#000000", // Dark black background color
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: -3,
-          },
-          shadowOpacity: 0.27,
-          shadowRadius: 4.65,
-          elevation: 6,
-          borderWidth: 0, // Remove border
-          overflow: "hidden", // Ensure content inside doesn't overflow
+          backgroundColor: theme.colors.backgroundSecondary,
+          borderTopWidth: 1,
+          borderTopColor: theme.colors.border,
+          height: 65,
+          paddingBottom: 10,
+          paddingTop: 10,
+          ...theme.shadows.large,
         },
-        tabBarActiveTintColor: "#FFFFFF", // White active tab color
-        tabBarInactiveTintColor: "#8E8E93", // Light gray inactive tab color
-        tabBarHideOnKeyboard: true, // Hide the tab bar when keyboard is shown
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.textMuted,
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarLabelStyle: {
-          fontSize: 12,
+          ...theme.typography.caption,
+          fontWeight: '600',
+          marginTop: 4,
         },
         tabBarIconStyle: {
-          width: 20,
-          height: 20,
-        },
-        tabBarButtonStyle: {
-          paddingVertical: 10,
+          marginTop: 4,
         },
       })}
     >
@@ -72,36 +72,28 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="home" type="material" color={color} size={size} />
-          ),
+          tabBarLabel: "Home",
         }}
       />
       <Tab.Screen
         name="Story"
         component={StoryScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="book" type="material" color={color} size={size} />
-          ),
+          tabBarLabel: "Story",
         }}
       />
       <Tab.Screen
         name="Explore"
         component={ExploreScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="search" type="material" color={color} size={size} />
-          ),
+          tabBarLabel: "Explore",
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="person" type="material" color={color} size={size} />
-          ),
+          tabBarLabel: "Profile",
         }}
       />
     </Tab.Navigator>

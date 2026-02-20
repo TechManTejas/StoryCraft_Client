@@ -6,20 +6,24 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  SafeAreaView,
+  Animated,
 } from "react-native";
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { useNavigation } from '@react-navigation/native';
+import { Sparkles, ArrowRight } from "lucide-react-native";
 import { api } from "../api";
+import { theme } from "../constants/theme";
 
 const genreColors = {
-  Action: "red",
-  Animation: "orange",
-  Comedy: "yellow",
-  Crime: "darkblue",
-  Drama: "blue",
-  Experimental: "cyan",
-  Fantasy: "pink",
-  Historical: "brown",
-  Horror: "black",
+  Action: theme.colors.error,
+  Animation: theme.colors.warning,
+  Comedy: theme.colors.accent,
+  Crime: "#6C5CE7",
+  Drama: theme.colors.info,
+  Experimental: theme.colors.secondary,
+  Fantasy: "#FD79A8",
+  Historical: "#A0855B",
+  Horror: "#2D3436",
 };
 
 const StoryScreen = () => {
@@ -63,121 +67,157 @@ const StoryScreen = () => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#fff" />
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+        <Text style={styles.loadingText}>Loading genres...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View
-        style={[
-          styles.borderedContainer,
-          selectedGenre && { borderColor: genreColors[selectedGenre] },
-        ]}
+    <SafeAreaView style={styles.container}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        {genres.map((genre, index) => (
-          <View
-            key={genre.id}
-            style={index % 2 === 0 ? styles.row : styles.centeredRow}
-          >
-            <TouchableOpacity
-              style={[
-                styles.card,
-                selectedGenre === genre.name
-                  ? { backgroundColor: genreColors[genre.name] }
-                  : {},
-              ]}
-              onPress={() => handleGenrePress(genre.name)}
-            >
-              <Text style={styles.cardText}>{genre.name}</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
+        <View style={styles.header}>
+          <Sparkles size={28} color={theme.colors.primary} />
+          <Text style={styles.headerTitle}>Choose Your Genre</Text>
+          <Text style={styles.headerSubtitle}>Select a genre to begin your story</Text>
+        </View>
 
-      <TouchableOpacity
-        style={[styles.letsGoButton, !selectedGenre && styles.disabledButton]}
-        onPress={handleLetsGoPress}
-        disabled={!selectedGenre}
-      >
-        <Text style={styles.letsGoButtonText}>Let's Go</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View style={styles.genresContainer}>
+          {genres.map((genre, index) => {
+            const isSelected = selectedGenre === genre.name;
+            const genreColor = genreColors[genre.name] || theme.colors.primary;
+            
+            return (
+              <TouchableOpacity
+                key={genre.id}
+                style={[
+                  styles.genreCard,
+                  isSelected && {
+                    backgroundColor: genreColor,
+                    borderColor: genreColor,
+                    ...theme.shadows.glow,
+                  },
+                ]}
+                onPress={() => handleGenrePress(genre.name)}
+                activeOpacity={0.7}
+              >
+                <Text style={[
+                  styles.genreText,
+                  isSelected && styles.genreTextSelected
+                ]}>
+                  {genre.name}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.letsGoButton,
+            !selectedGenre && styles.disabledButton
+          ]}
+          onPress={handleLetsGoPress}
+          disabled={!selectedGenre}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.letsGoButtonText}>Let's Go</Text>
+          <ArrowRight size={20} color={theme.colors.textPrimary} style={{ marginLeft: 8 }} />
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#242424",
-    padding: 10,
+    backgroundColor: theme.colors.background,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: theme.spacing.lg,
+    paddingBottom: theme.spacing.xl,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#242424",
+    backgroundColor: theme.colors.background,
   },
-  borderedContainer: {
-    marginTop: 20,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 2,
+  loadingText: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing.md,
   },
-  row: {
+  header: {
+    alignItems: 'center',
+    marginBottom: theme.spacing.xl,
+  },
+  headerTitle: {
+    ...theme.typography.h2,
+    color: theme.colors.textPrimary,
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
+  },
+  headerSubtitle: {
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
+    textAlign: 'center',
+  },
+  genresContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     justifyContent: "space-between",
-    marginVertical: 5,
+    marginBottom: theme.spacing.xl,
   },
-  centeredRow: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginVertical: 5,
-    width: "100%",
-  },
-  card: {
-    backgroundColor: "#494949",
-    padding: 15,
-    borderRadius: 10,
-    margin: 5,
+  genreCard: {
+    backgroundColor: theme.colors.backgroundCard,
+    padding: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
+    marginBottom: theme.spacing.md,
     justifyContent: "center",
     alignItems: "center",
-    height: 80,
+    minHeight: 90,
     width: "48%",
-    borderWidth: 1,
-    borderColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 3,
+    borderWidth: 2,
+    borderColor: theme.colors.border,
+    ...theme.shadows.medium,
   },
-  cardText: {
-    color: "#dbdbdb",
+  genreText: {
+    ...theme.typography.body,
+    color: theme.colors.textPrimary,
     textAlign: "center",
-    fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
+  },
+  genreTextSelected: {
+    color: theme.colors.textPrimary,
+    fontWeight: "700",
   },
   letsGoButton: {
-    backgroundColor: "#f60b0e",
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: theme.colors.primary,
+    padding: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
     alignItems: "center",
-    marginVertical: 20,
+    justifyContent: "center",
+    flexDirection: "row",
+    marginTop: theme.spacing.md,
+    ...theme.shadows.glow,
   },
   letsGoButtonText: {
-    color: "#FFFFFF",
+    ...theme.typography.button,
+    color: theme.colors.textPrimary,
     fontSize: 18,
-    fontWeight: "bold",
   },
   disabledButton: {
-    backgroundColor: "#888",
+    backgroundColor: theme.colors.textMuted,
+    opacity: 0.5,
   },
 });
 

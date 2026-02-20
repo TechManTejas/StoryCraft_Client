@@ -7,9 +7,12 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  SafeAreaView,
 } from "react-native";
-import GridView from "../components/GridView"; // Adjust import path as per your project structure
-import BookDetailsScreen from "./BookDetailsScreen"; // Adjust import path as per your project structure
+import { Search } from "lucide-react-native";
+import GridView from "../components/GridView";
+import BookDetailsScreen from "./BookDetailsScreen";
+import { theme } from "../constants/theme";
 
 // Import images from assets
 const enchantedForest = require("../../assets/images/story1.jpeg");
@@ -104,73 +107,95 @@ const ExploreScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Explore</Text>
+        <Text style={styles.headerSubtitle}>Discover amazing stories</Text>
+      </View>
+      
       <View style={styles.searchBar}>
+        <View style={styles.searchIconContainer}>
+          <Search size={20} color={theme.colors.textSecondary} />
+        </View>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search books..."
-          placeholderTextColor="#929292"
+          placeholder="Search books, authors..."
+          placeholderTextColor={theme.colors.textMuted}
           onChangeText={handleSearch}
           value={searchQuery}
         />
-        <TouchableOpacity
-          style={styles.searchBtn}
-          onPress={() => handleSearch(searchQuery)}
-        >
-          <Text style={styles.searchBtnText}>Search</Text>
-        </TouchableOpacity>
+        {searchQuery.length > 0 && (
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() => handleSearch("")}
+          >
+            <Text style={styles.clearButtonText}>Clear</Text>
+          </TouchableOpacity>
+        )}
       </View>
+      
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollViewContent}
       >
         <GridView data={filteredBooks} onPress={handleBookPress} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#242424",
-    padding: 20,
+    backgroundColor: theme.colors.background,
+  },
+  header: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing.md,
+  },
+  headerTitle: {
+    ...theme.typography.h1,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.xs,
+  },
+  headerSubtitle: {
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
   },
   searchBar: {
-    marginTop: 20, // Adjust margin top to create space below the top of the screen
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10,
-    backgroundColor: "#494949",
-    borderRadius: 15,
+    marginHorizontal: theme.spacing.lg,
+    marginBottom: theme.spacing.lg,
+    backgroundColor: theme.colors.backgroundSecondary,
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 1,
-    borderColor: "#ffffff", // White border
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 3,
+    borderColor: theme.colors.border,
+    paddingHorizontal: theme.spacing.md,
+    ...theme.shadows.medium,
+  },
+  searchIconContainer: {
+    marginRight: theme.spacing.sm,
   },
   searchInput: {
-    height: 40,
     flex: 1,
-    paddingHorizontal: 10,
-    color: "#dbdbdb",
+    height: 50,
+    ...theme.typography.body,
+    color: theme.colors.textPrimary,
   },
-  searchBtn: {
-    backgroundColor: "#f60b0e",
-    marginLeft: 10,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 15,
+  clearButton: {
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
   },
-  searchBtnText: {
-    color: "#fff",
-    fontSize: 16,
+  clearButtonText: {
+    ...theme.typography.bodySmall,
+    color: theme.colors.primary,
+    fontWeight: '600',
   },
   scrollViewContent: {
-    paddingBottom: 20,
+    paddingBottom: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.md,
   },
 });
 
