@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from "react-native";
 import { Card } from "@gluestack-ui/themed";
-import { Heart } from "lucide-react-native";
+import { Heart, Star, Eye, BookOpen } from "lucide-react-native";
 import { theme } from "../constants/theme";
 
-const StoryCard = ({ title, author, description, image }) => {
+const StoryCard = ({ title, author, description, image, rating, views, chapters }) => {
   const [liked, setLiked] = useState(false);
   const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
@@ -37,26 +37,51 @@ const StoryCard = ({ title, author, description, image }) => {
       </View>
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={2}>{title}</Text>
-        <Text style={styles.description} numberOfLines={3}>{description}</Text>
-        <View style={styles.footer}>
-          <View style={styles.authorContainer}>
-            <Text style={styles.authorLabel}>by</Text>
-            <Text style={styles.author}>{author}</Text>
-          </View>
-          <TouchableOpacity 
-            onPress={toggleLike} 
-            style={styles.likeButton}
-            activeOpacity={0.7}
-          >
-            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-              <Heart
-                size={24}
-                color={liked ? theme.colors.primary : theme.colors.textTertiary}
-                fill={liked ? theme.colors.primary : 'transparent'}
-              />
-            </Animated.View>
-          </TouchableOpacity>
-        </View>
+            <Text style={styles.description} numberOfLines={3}>{description}</Text>
+            
+            {/* Stats Row */}
+            {(rating || views || chapters) && (
+              <View style={styles.statsRow}>
+                {rating && (
+                  <View style={styles.statItem}>
+                    <Star size={14} color={theme.colors.accent} fill={theme.colors.accent} />
+                    <Text style={styles.statText}>{rating}</Text>
+                  </View>
+                )}
+                {views && (
+                  <View style={styles.statItem}>
+                    <Eye size={14} color={theme.colors.textSecondary} />
+                    <Text style={styles.statText}>{views}</Text>
+                  </View>
+                )}
+                {chapters && (
+                  <View style={styles.statItem}>
+                    <BookOpen size={14} color={theme.colors.secondary} />
+                    <Text style={styles.statText}>{chapters} ch</Text>
+                  </View>
+                )}
+              </View>
+            )}
+            
+            <View style={styles.footer}>
+              <View style={styles.authorContainer}>
+                <Text style={styles.authorLabel}>by</Text>
+                <Text style={styles.author}>{author}</Text>
+              </View>
+              <TouchableOpacity 
+                onPress={toggleLike} 
+                style={styles.likeButton}
+                activeOpacity={0.7}
+              >
+                <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+                  <Heart
+                    size={24}
+                    color={liked ? theme.colors.primary : theme.colors.textTertiary}
+                    fill={liked ? theme.colors.primary : 'transparent'}
+                  />
+                </Animated.View>
+              </TouchableOpacity>
+            </View>
       </View>
     </Card>
   );
@@ -127,6 +152,25 @@ const styles = StyleSheet.create({
     color: theme.colors.textSecondary,
     lineHeight: 20,
     marginBottom: theme.spacing.md,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.md,
+    paddingTop: theme.spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+  },
+  statItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+  statText: {
+    ...theme.typography.caption,
+    color: theme.colors.textSecondary,
+    fontWeight: '600',
   },
   footer: {
     flexDirection: "row",

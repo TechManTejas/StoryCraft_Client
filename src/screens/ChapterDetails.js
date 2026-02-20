@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import Honeycomb from "../components/LoadingComponent"; // Import the Honeycomb component
+import { Image as ImageIcon } from "lucide-react-native";
+import Honeycomb from "../components/LoadingComponent";
 import { api } from "../api";
+import { theme } from "../constants/theme";
 
 const ChapterDetails = ({ route, navigation }) => {
   const { genre_id } = route.params;
@@ -84,6 +86,13 @@ const ChapterDetails = ({ route, navigation }) => {
     });
   };
 
+  const handleImageGenerationPress = () => {
+    navigation.navigate("ImageGenerationScreen", {
+      storyId,
+      initialSceneId: sceneId,
+    });
+  };
+
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -112,6 +121,16 @@ const ChapterDetails = ({ route, navigation }) => {
       >
         <Text style={styles.letsGoButtonText}>Let's Twist the Journey</Text>
       </TouchableOpacity>
+
+      {storyId && (
+        <TouchableOpacity
+          style={styles.imageGenButton}
+          onPress={handleImageGenerationPress}
+        >
+          <ImageIcon size={20} color={theme.colors.textPrimary} />
+          <Text style={styles.imageGenButtonText}>Generate Story Images</Text>
+        </TouchableOpacity>
+      )}
 
       {showSituations && (
         <View style={styles.situationsContainer}>
@@ -235,6 +254,21 @@ const styles = StyleSheet.create({
   updateButtonText: {
     color: "#dbdbdb",
     fontSize: 16,
+  },
+  imageGenButton: {
+    backgroundColor: theme.colors.secondary,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 10,
+  },
+  imageGenButtonText: {
+    color: theme.colors.textPrimary,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 

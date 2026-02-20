@@ -119,4 +119,49 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+
+  getStoryTimeline: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/stories/${story_id}/timeline/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, timeline: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  generateImage: async (story_id, scene_id, context) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/images/generate/",
+        { story_id, scene_id, context },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, imageUrl: res.data.image_url, imageId: res.data.id };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getStoryImages: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/images/`, {
+        params: { story_id },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, images: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };
