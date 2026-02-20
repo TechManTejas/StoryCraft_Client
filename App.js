@@ -10,6 +10,7 @@ import LoginScreen from "./src/screens/LoginScreen";
 import UpdatedStoryScreen from "./src/screens/UpdatedStoryScreen";
 import ChapterDetails from "./src/screens/ChapterDetails";
 import StoryScreen from "./src/screens/StoryScreen";
+import ImageGenerationScreen from "./src/screens/ImageGenerationScreen";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           <Stack.Screen name="StoryScreen" component={StoryScreen} />
           <Stack.Screen name="UpdatedStoryScreen" component={UpdatedStoryScreen} />
           <Stack.Screen name="ChapterDetails" component={ChapterDetails} />
+          <Stack.Screen name="ImageGenerationScreen" component={ImageGenerationScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GluestackUIProvider>
