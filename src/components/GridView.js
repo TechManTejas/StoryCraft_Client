@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
 } from "react-native";
+import { theme } from "../constants/theme";
 
 const GridView = ({ data, onPress }) => {
   return (
@@ -32,57 +33,52 @@ const GridView = ({ data, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.lg,
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    borderColor: "#fff",
+    borderColor: theme.colors.border,
     borderWidth: 1,
-    borderRadius: 20,
-    shadowColor: "#ffffff",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 3,
-    backgroundColor: "#242424",
+    borderRadius: theme.borderRadius.xl,
+    backgroundColor: theme.colors.backgroundCard,
     overflow: "hidden",
+    ...theme.shadows.medium,
   },
   bookItem: {
     width: "48%",
-    marginBottom: 20,
-    backgroundColor: "#494949",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 3,
+    marginBottom: theme.spacing.lg,
+    backgroundColor: theme.colors.backgroundCard,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
     overflow: "hidden",
+    ...theme.shadows.medium,
   },
   imageContainer: {
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
-    height: 200, // Adjusted height for better fitting
+    padding: theme.spacing.md,
+    height: 220,
   },
   bookImage: {
-    width: "100%", // Adjusted width to fill the container
-    height: "100%", // Adjusted height to fill the container
-    resizeMode: "cover", // Ensures the image covers the area without stretching
-    borderRadius: 10,
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+    borderRadius: theme.borderRadius.md,
   },
   bookDetails: {
-    padding: 10,
+    padding: theme.spacing.md,
   },
   bookTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#dbdbdb",
+    ...theme.typography.body,
+    fontWeight: "600",
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.xs,
   },
   bookAuthor: {
-    fontSize: 14,
-    color: "#b6b6b6",
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
   },
 });
 

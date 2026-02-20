@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView } from "react-native";
 import {
   Button,
   Input,
@@ -7,10 +7,11 @@ import {
   InputSlot,
   InputIcon,
 } from "@gluestack-ui/themed";
-import { EyeIcon, EyeOffIcon } from "lucide-react-native";
+import { EyeIcon, EyeOffIcon, BookOpen, Sparkles } from "lucide-react-native";
 import { FormControl, VStack, Heading, ButtonText } from "@gluestack-ui/themed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { api } from "../api"; // Assuming this is correctly imported
+import { api } from "../api";
+import { theme } from "../constants/theme";
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -18,7 +19,24 @@ const LoginScreen = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [inputTouched, setInputTouched] = useState(false); // New state variable
+  const [inputTouched, setInputTouched] = useState(false);
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const slideAnim = React.useRef(new Animated.Value(50)).current;
+
+  React.useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handleState = () => {
     setShowPassword((showState) => !showState);
@@ -49,152 +67,245 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Sample Credentials Box */}
-      <View style={styles.credentialsBox}>
-        <Text style={styles.credentialsHeading}>
-          Sample Credentials for Google Play Review
-        </Text>
-        <Text style={styles.credentialsText}>Username: arjun</Text>
-        <Text style={styles.credentialsText}>Password: arjun</Text>
-      </View>
-
-      <FormControl style={styles.formControl}>
-        <VStack space="xl">
-          <Heading color="$text900" lineHeight="$md" style={styles.heading}>
-            Login
-          </Heading>
-          <VStack space="xs">
-            <Input variant="underlined" onFocus={handleFocus}>
-              <InputField
-                placeholder="Username"
-                value={username}
-                onChangeText={(text) => setUsername(text)}
-                style={styles.inputField}
-              />
-            </Input>
-            {(usernameError || inputTouched) && <Text style={styles.errorText}>{usernameError}</Text>}
-          </VStack>
-          <VStack space="xs">
-            <Input textAlign="center" variant="underlined" onFocus={handleFocus}>
-              <InputField
-                placeholder="Password"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                type={showPassword ? "text" : "password"}
-                style={styles.inputField}
-              />
-              <InputSlot pr="$3" onPress={handleState}>
-                <InputIcon
-                  as={showPassword ? EyeIcon : EyeOffIcon}
-                  color="#ffffff"
-                />
-              </InputSlot>
-            </Input>
-            {(passwordError || inputTouched) && <Text style={styles.errorText}>{passwordError}</Text>}
-          </VStack>
-          <View style={styles.buttonContainer}>
-            <Button
-              onPress={handleLogin}
-              style={styles.loginButton}
-              variant="outline"
-            >
-              <ButtonText color="#ffffff">
-                <Text style={styles.buttonText}>Login</Text>
-              </ButtonText>
-            </Button>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.background}>
+        <Animated.View 
+          style={[
+            styles.content,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <Sparkles size={32} color={theme.colors.primary} />
+            <Text style={styles.appTitle}>StoryCraft</Text>
+            <BookOpen size={32} color={theme.colors.secondary} />
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
-            <Text style={styles.signupLink}>Don't have an account? Signup</Text>
-          </TouchableOpacity>
-        </VStack>
-      </FormControl>
-    </View>
+
+          {/* Sample Credentials Box */}
+          <View style={styles.credentialsBox}>
+            <Text style={styles.credentialsHeading}>
+              Sample Credentials
+            </Text>
+            <View style={styles.credentialsContent}>
+              <Text style={styles.credentialsLabel}>Username:</Text>
+              <Text style={styles.credentialsValue}>arjun</Text>
+            </View>
+            <View style={styles.credentialsContent}>
+              <Text style={styles.credentialsLabel}>Password:</Text>
+              <Text style={styles.credentialsValue}>arjun</Text>
+            </View>
+          </View>
+
+          <FormControl style={styles.formControl}>
+            <VStack space="xl">
+              <Heading style={styles.heading}>Welcome Back</Heading>
+              <Text style={styles.subheading}>Sign in to continue your journey</Text>
+              
+              <VStack space="xs">
+                <Text style={styles.label}>Username</Text>
+                <Input 
+                  variant="outline" 
+                  onFocus={handleFocus}
+                  style={styles.input}
+                >
+                  <InputField
+                    placeholder="Enter your username"
+                    placeholderTextColor={theme.colors.textMuted}
+                    value={username}
+                    onChangeText={(text) => setUsername(text)}
+                    style={styles.inputField}
+                  />
+                </Input>
+                {(usernameError || inputTouched) && (
+                  <Text style={styles.errorText}>{usernameError}</Text>
+                )}
+              </VStack>
+              
+              <VStack space="xs">
+                <Text style={styles.label}>Password</Text>
+                <Input 
+                  variant="outline" 
+                  onFocus={handleFocus}
+                  style={styles.input}
+                >
+                  <InputField
+                    placeholder="Enter your password"
+                    placeholderTextColor={theme.colors.textMuted}
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
+                    type={showPassword ? "text" : "password"}
+                    style={styles.inputField}
+                  />
+                  <InputSlot pr="$3" onPress={handleState}>
+                    <InputIcon
+                      as={showPassword ? EyeIcon : EyeOffIcon}
+                      color={theme.colors.textSecondary}
+                    />
+                  </InputSlot>
+                </Input>
+                {(passwordError || inputTouched) && (
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                )}
+              </VStack>
+              
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  onPress={handleLogin}
+                  style={styles.loginButton}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+              </View>
+              
+              <TouchableOpacity 
+                onPress={() => navigation.navigate("SignupScreen")}
+                style={styles.signupLinkContainer}
+              >
+                <Text style={styles.signupLinkText}>Don't have an account? </Text>
+                <Text style={styles.signupLink}>Sign up</Text>
+              </TouchableOpacity>
+            </VStack>
+          </FormControl>
+        </Animated.View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  background: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
     justifyContent: "center",
     alignItems: "center",
-    padding: 16,
-    backgroundColor: "#242424",
+    padding: theme.spacing.md,
+  },
+  content: {
+    width: '100%',
+    maxWidth: 400,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.xl,
+  },
+  appTitle: {
+    ...theme.typography.h1,
+    color: theme.colors.textPrimary,
+    marginHorizontal: theme.spacing.md,
+    fontWeight: '800',
   },
   credentialsBox: {
-    padding: 16,
-    width: 350,
+    padding: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#8B0000",
-    backgroundColor: "#2a2a2a", // Slightly different color for distinction
-    marginBottom: 20,
-    shadowColor: "#8B0000",
-    shadowOffset: { width: 4, height: 10 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 10,
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.backgroundCard,
+    marginBottom: theme.spacing.xl,
+    ...theme.shadows.medium,
   },
   credentialsHeading: {
-    color: "#ffffff",
+    ...theme.typography.h3,
+    color: theme.colors.textPrimary,
     textAlign: "center",
-    fontSize: 16,
-    marginBottom: 5,
-    fontWeight: "bold",
+    marginBottom: theme.spacing.md,
   },
-  credentialsText: {
-    color: "#ffffff",
-    textAlign: "center",
-    fontSize: 14,
+  credentialsContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.sm,
+  },
+  credentialsLabel: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
+    fontWeight: '500',
+  },
+  credentialsValue: {
+    ...theme.typography.body,
+    color: theme.colors.primary,
+    fontWeight: '600',
   },
   formControl: {
-    padding: 16,
-    width: 350,
+    padding: theme.spacing.xl,
+    borderRadius: theme.borderRadius.xl,
     borderWidth: 1,
-    borderRadius: 8,
-    borderColor: "#8D8D8D",
-    backgroundColor: "#242424",
-    shadowColor: "#ffffff",
-    shadowOffset: { width: 4, height: 10 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 10,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.backgroundCard,
+    ...theme.shadows.large,
   },
   heading: {
-    color: "#ffffff",
+    ...theme.typography.h2,
+    color: theme.colors.textPrimary,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: theme.spacing.sm,
+  },
+  subheading: {
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
+    textAlign: "center",
+    marginBottom: theme.spacing.lg,
+  },
+  label: {
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing.xs,
+    fontWeight: '500',
+  },
+  input: {
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.backgroundSecondary,
   },
   inputField: {
-    color: "#ffffff",
+    ...theme.typography.body,
+    color: theme.colors.textPrimary,
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "100%",
-    marginBottom: 10,
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
   },
   loginButton: {
-    alignSelf: "center",
-    borderColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-  },
-  signupLink: {
-    color: "#ffffff",
-    textAlign: "center",
-    marginTop: 10,
-    textDecorationLine: "underline",
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.xl,
+    alignItems: "center",
+    justifyContent: "center",
+    ...theme.shadows.glow,
   },
   buttonText: {
-    color: "#ffffff",
+    ...theme.typography.button,
+    color: theme.colors.textPrimary,
+    fontSize: 18,
+  },
+  signupLinkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: theme.spacing.md,
+  },
+  signupLinkText: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
+  },
+  signupLink: {
+    ...theme.typography.body,
+    color: theme.colors.primary,
+    fontWeight: '600',
+    textDecorationLine: "underline",
   },
   errorText: {
-    color: "#ff0000", // Error message text color
-    fontSize: 14,
-    marginTop: 5,
+    ...theme.typography.caption,
+    color: theme.colors.error,
+    marginTop: theme.spacing.xs,
   },
 });
 

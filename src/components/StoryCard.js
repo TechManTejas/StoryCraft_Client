@@ -1,33 +1,62 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from "react-native";
 import { Card } from "@gluestack-ui/themed";
-import { FontAwesome } from "@expo/vector-icons";
+import { Heart } from "lucide-react-native";
+import { theme } from "../constants/theme";
 
 const StoryCard = ({ title, author, description, image }) => {
   const [liked, setLiked] = useState(false);
+  const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
   const toggleLike = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 1.2,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start();
     setLiked(!liked);
   };
 
   return (
     <Card style={styles.card}>
-      <View style={styles.overlay}>
-        <Text style={styles.comingSoonText}>Coming Soon</Text>
+      <View style={styles.imageContainer}>
+        <Image style={styles.image} source={image} />
+        <View style={styles.imageOverlay} />
+        <View style={styles.overlay}>
+          <View style={styles.comingSoonBadge}>
+            <Text style={styles.comingSoonText}>Coming Soon</Text>
+          </View>
+        </View>
       </View>
-      <Image style={styles.image} source={image} />
-      <Text style={styles.date}></Text>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
-      <View style={styles.footer}>
-        <Text style={styles.author}>{author}</Text>
-        <TouchableOpacity onPress={toggleLike} style={styles.likeButton}>
-          <FontAwesome
-            name={liked ? "heart" : "heart-o"}
-            size={24}
-            color={liked ? "#f60b0e" : "#929292"}
-          />
-        </TouchableOpacity>
+      <View style={styles.content}>
+        <Text style={styles.title} numberOfLines={2}>{title}</Text>
+        <Text style={styles.description} numberOfLines={3}>{description}</Text>
+        <View style={styles.footer}>
+          <View style={styles.authorContainer}>
+            <Text style={styles.authorLabel}>by</Text>
+            <Text style={styles.author}>{author}</Text>
+          </View>
+          <TouchableOpacity 
+            onPress={toggleLike} 
+            style={styles.likeButton}
+            activeOpacity={0.7}
+          >
+            <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+              <Heart
+                size={24}
+                color={liked ? theme.colors.primary : theme.colors.textTertiary}
+                fill={liked ? theme.colors.primary : 'transparent'}
+              />
+            </Animated.View>
+          </TouchableOpacity>
+        </View>
       </View>
     </Card>
   );
@@ -35,16 +64,32 @@ const StoryCard = ({ title, author, description, image }) => {
 
 const styles = StyleSheet.create({
   card: {
-    padding: 20,
-    borderRadius: 12,
-    maxWidth: 360,
-    margin: 12,
-    backgroundColor: "rgba(45, 45, 45, 0.8)", // Reduced opacity
-    shadowColor: "#fff",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    position: "relative", // To allow overlay positioning
+    padding: 0,
+    borderRadius: theme.borderRadius.xl,
+    margin: theme.spacing.md,
+    backgroundColor: theme.colors.backgroundCard,
+    ...theme.shadows.large,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    overflow: 'hidden',
+  },
+  imageContainer: {
+    position: 'relative',
+    height: 280,
+    width: '100%',
+  },
+  image: {
+    height: '100%',
+    width: '100%',
+    resizeMode: 'cover',
+  },
+  imageOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   overlay: {
     position: "absolute",
@@ -52,49 +97,64 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1, // Ensure overlay is on top
+    zIndex: 1,
+  },
+  comingSoonBadge: {
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.round,
+    ...theme.shadows.medium,
   },
   comingSoonText: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
+    ...theme.typography.button,
+    color: theme.colors.textPrimary,
+    fontSize: 16,
+    fontWeight: '700',
   },
-  image: {
-    height: 240,
-    width: "100%",
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  date: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 8,
+  content: {
+    padding: theme.spacing.lg,
   },
   title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 8,
-    color: "#b6b6b6",
+    ...theme.typography.h3,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.sm,
   },
   description: {
-    marginTop: 4,
-    color: "#6d6d6d",
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
+    lineHeight: 20,
+    marginBottom: theme.spacing.md,
   },
   footer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 8,
+    marginTop: theme.spacing.sm,
+    paddingTop: theme.spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+  },
+  authorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  authorLabel: {
+    ...theme.typography.caption,
+    color: theme.colors.textTertiary,
+    marginRight: theme.spacing.xs,
   },
   author: {
-    fontSize: 14,
-    color: "#494949",
+    ...theme.typography.bodySmall,
+    color: theme.colors.textSecondary,
+    fontWeight: '500',
   },
   likeButton: {
-    marginLeft: "auto",
+    padding: theme.spacing.xs,
+    marginLeft: theme.spacing.sm,
   },
 });
 

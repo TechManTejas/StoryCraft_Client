@@ -6,9 +6,12 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import StoryCard from "../components/StoryCard";
+import { theme } from "../constants/theme";
+import { BookOpen, Sparkles } from "lucide-react-native";
 
 const stories = [
   {
@@ -39,6 +42,15 @@ const stories = [
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const handleStartJourney = () => {
     navigation.navigate("StoryScreen");
@@ -46,29 +58,54 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Featured Stories</Text>
-      <FlatList
-        data={stories}
-        renderItem={({ item }) => (
-          <StoryCard
-            title={item.title}
-            author={item.author}
-            description={item.description}
-            image={item.image}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.contentContainer}
-        ListFooterComponent={
-          <TouchableOpacity 
-            style={styles.startButton}
-            onPress={handleStartJourney}
-          >
-            <Text style={styles.startButtonText}>Start Your Journey</Text>
-          </TouchableOpacity>
-        }
-        showsVerticalScrollIndicator={false}
-      />
+      <View style={styles.gradientBackground}>
+        <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+          <View style={styles.headerContent}>
+            <Sparkles size={28} color={theme.colors.primary} style={styles.icon} />
+            <Text style={styles.heading}>Featured Stories</Text>
+            <BookOpen size={28} color={theme.colors.secondary} style={styles.icon} />
+          </View>
+          <View style={styles.divider} />
+        </Animated.View>
+        
+        <FlatList
+          data={stories}
+          renderItem={({ item, index }) => (
+            <Animated.View
+              style={[
+                { opacity: fadeAnim },
+                { transform: [{ translateY: fadeAnim.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [20, 0],
+                })}] }
+              ]}
+            >
+              <StoryCard
+                title={item.title}
+                author={item.author}
+                description={item.description}
+                image={item.image}
+              />
+            </Animated.View>
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.contentContainer}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            <Animated.View style={{ opacity: fadeAnim }}>
+              <TouchableOpacity 
+                style={styles.startButton}
+                onPress={handleStartJourney}
+                activeOpacity={0.8}
+              >
+                <View style={styles.buttonGradient}>
+                  <Text style={styles.startButtonText}>Start Your Journey</Text>
+                </View>
+              </TouchableOpacity>
+            </Animated.View>
+          }
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -76,38 +113,60 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#242424",
-    paddingHorizontal: 10,
-    paddingTop: 20,
+  },
+  gradientBackground: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  header: {
+    paddingTop: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.md,
+    marginBottom: theme.spacing.md,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.sm,
+  },
+  icon: {
+    marginHorizontal: theme.spacing.sm,
   },
   heading: {
-    paddingTop: 10,
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#ffffff",
-    marginBottom: 10,
+    ...theme.typography.h1,
+    color: theme.colors.textPrimary,
     textAlign: "center",
+    marginHorizontal: theme.spacing.sm,
+  },
+  divider: {
+    height: 2,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.round,
+    marginTop: theme.spacing.sm,
+    opacity: 0.6,
   },
   contentContainer: {
-    paddingBottom: 20,
+    paddingHorizontal: theme.spacing.md,
+    paddingBottom: theme.spacing.xl,
   },
   startButton: {
-    backgroundColor: "#f60b0e",
-    borderRadius: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    borderRadius: theme.borderRadius.xl,
+    overflow: 'hidden',
+    marginVertical: theme.spacing.xl,
+    ...theme.shadows.glow,
+  },
+  buttonGradient: {
+    paddingVertical: theme.spacing.md + 4,
+    paddingHorizontal: theme.spacing.xl,
     alignItems: "center",
-    shadowColor: "#f60b0e",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 10,
-    marginVertical: 20,
+    justifyContent: 'center',
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.xl,
   },
   startButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#ffffff",
+    ...theme.typography.button,
+    color: theme.colors.textPrimary,
+    fontSize: 18,
   },
 });
 

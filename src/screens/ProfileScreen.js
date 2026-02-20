@@ -1,7 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from "react-native";
-import { api } from "../api"; // Ensure this path is correct
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert, SafeAreaView, ScrollView } from "react-native";
+import { User, BookOpen, LogOut, Trash2 } from "lucide-react-native";
+import { api } from "../api";
+import { theme } from "../constants/theme";
 
 // Import images from assets
 const book1 = require('../../assets/images/story1.jpeg');
@@ -87,134 +89,169 @@ const ProfileScreen = ({ navigation }) => {
   const renderBookCard = ({ item }) => (
     <View style={styles.bookCard}>
       <Image source={item.image} style={styles.bookImage} />
-      <Text style={styles.bookName}>{item.name}</Text>
+      <View style={styles.bookInfo}>
+        <Text style={styles.bookName} numberOfLines={2}>{item.name}</Text>
+      </View>
     </View>
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.profileInfoContainer}>
-        <View style={styles.profileInfo}>
-          <Text style={styles.username}>{username}</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.profileHeader}>
+          <View style={styles.avatarContainer}>
+            <User size={40} color={theme.colors.primary} />
+          </View>
+          <Text style={styles.username}>{username || "User"}</Text>
           <Text style={styles.bio}>{bio}</Text>
         </View>
-      </View>
-      <FlatList
-        data={books}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderBookCard}
-        contentContainerStyle={styles.bookList}
-      />
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>Logout</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteAccount}>
-        <Text style={styles.deleteButtonText}>Delete Account</Text>
-      </TouchableOpacity>
-    </View>
+
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <BookOpen size={20} color={theme.colors.secondary} />
+            <Text style={styles.sectionTitle}>My Library</Text>
+          </View>
+          <FlatList
+            data={books}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderBookCard}
+            scrollEnabled={false}
+            contentContainerStyle={styles.bookList}
+          />
+        </View>
+
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleLogout}
+            activeOpacity={0.8}
+          >
+            <LogOut size={20} color={theme.colors.textPrimary} />
+            <Text style={styles.actionButtonText}>Logout</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={[styles.actionButton, styles.deleteButton]} 
+            onPress={handleDeleteAccount}
+            activeOpacity={0.8}
+          >
+            <Trash2 size={20} color={theme.colors.textPrimary} />
+            <Text style={styles.actionButtonText}>Delete Account</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#242424",
-    padding: 20,
+    backgroundColor: theme.colors.background,
   },
-  profileInfoContainer: {
-    alignItems: "center",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "orange",
-    borderRadius: 10,
-    padding: 10,
-    shadowColor: "orange",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 5,
+  scrollContent: {
+    paddingBottom: theme.spacing.xl,
   },
-  profileInfo: {
+  profileHeader: {
     alignItems: "center",
+    paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  avatarContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: theme.borderRadius.round,
+    backgroundColor: theme.colors.backgroundSecondary,
+    borderWidth: 3,
+    borderColor: theme.colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: theme.spacing.md,
+    ...theme.shadows.medium,
   },
   username: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "#dbdbdb",
+    ...theme.typography.h2,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing.sm,
   },
   bio: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
     textAlign: "center",
-    color: "#b6b6b6",
-    marginBottom: 20,
+  },
+  section: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.xl,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.md,
+  },
+  sectionTitle: {
+    ...theme.typography.h3,
+    color: theme.colors.textPrimary,
+    marginLeft: theme.spacing.sm,
   },
   bookList: {
-    flexGrow: 1,
-    justifyContent: "center",
+    paddingBottom: theme.spacing.md,
   },
   bookCard: {
-    backgroundColor: "#494949",
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
+    backgroundColor: theme.colors.backgroundCard,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing.md,
+    marginBottom: theme.spacing.md,
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#FFFFFF",
-    shadowColor: "#FFFFFF",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 5,
+    borderColor: theme.colors.border,
+    ...theme.shadows.medium,
   },
   bookImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
-    marginRight: 10,
+    width: 60,
+    height: 60,
+    borderRadius: theme.borderRadius.md,
+    marginRight: theme.spacing.md,
     resizeMode: "cover",
   },
+  bookInfo: {
+    flex: 1,
+  },
   bookName: {
-    fontSize: 18,
-    color: "#dbdbdb",
+    ...theme.typography.body,
+    color: theme.colors.textPrimary,
+    fontWeight: '500',
   },
-  logoutButton: {
-    backgroundColor: "#000000",
-    padding: 15,
-    borderRadius: 10,
+  actionsContainer: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.xl,
+    gap: theme.spacing.md,
+  },
+  actionButton: {
+    backgroundColor: theme.colors.backgroundSecondary,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.lg,
+    flexDirection: "row",
     alignItems: "center",
-    marginVertical: 20,
+    justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#FFFFFF",
-    shadowColor: "#FFFFFF",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  logoutButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "bold",
+    borderColor: theme.colors.border,
+    ...theme.shadows.medium,
+    gap: theme.spacing.sm,
   },
   deleteButton: {
-    backgroundColor: "#8B0000",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginVertical: 20,
-    borderWidth: 1,
-    borderColor: "#FFFFFF",
-    shadowColor: "#FFFFFF",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 5,
+    backgroundColor: theme.colors.error + '20',
+    borderColor: theme.colors.error,
   },
-  deleteButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "bold",
+  actionButtonText: {
+    ...theme.typography.button,
+    color: theme.colors.textPrimary,
+    fontSize: 16,
   },
 });
 
