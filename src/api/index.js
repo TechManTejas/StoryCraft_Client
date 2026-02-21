@@ -620,4 +620,81 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+
+  // Support APIs
+  submitFeedback: async (subject, message, feedback_type = "general") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/support/feedback/",
+        { subject, message, feedback_type },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, message: res.data.message };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  reportBug: async (title, description, steps_to_reproduce) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/support/bug-report/",
+        { title, description, steps_to_reproduce },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, message: res.data.message };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  contactSupport: async (subject, message, priority = "normal") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/support/contact/",
+        { subject, message, priority },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, ticket_id: res.data.ticket_id, message: res.data.message };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getFAQs: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/support/faqs/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, faqs: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getUserStats: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/users/stats/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, stats: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };
