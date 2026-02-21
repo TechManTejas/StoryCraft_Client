@@ -164,4 +164,143 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+
+  // Collaborative Platform APIs
+  getPublicStories: async (page = 1, limit = 20, genre = null, search = null) => {
+    try {
+      const token = await getAuthToken();
+      const params = { page, limit };
+      if (genre) params.genre = genre;
+      if (search) params.search = search;
+      
+      const res = await axiosInstance.get("/stories/public/", {
+        params,
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, stories: res.data.results || res.data, total: res.data.count || res.data.length };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getPublicStoryDetails: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/stories/${story_id}/public/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, story: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  likeStory: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/stories/${story_id}/like/`,
+        {},
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, liked: res.data.liked, likesCount: res.data.likes_count };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  followUser: async (username) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/users/${username}/follow/`,
+        {},
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, following: res.data.following };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getUserProfile: async (username) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/users/${username}/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, user: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getUserStories: async (username, page = 1) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/users/${username}/stories/`, {
+        params: { page },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, stories: res.data.results || res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getTrendingStories: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/stories/trending/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, stories: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  addComment: async (story_id, comment) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/stories/${story_id}/comments/`,
+        { comment },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, comment: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getStoryComments: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/stories/${story_id}/comments/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, comments: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };
