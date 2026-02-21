@@ -1,10 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Animated, Easing } from "react-native";
-import { Home, BookOpen, Search, User } from "lucide-react-native";
+import { Home, BookOpen, Users, User } from "lucide-react-native";
 import HomeScreen from "../screens/HomeScreen";
 import StoryScreen from "../screens/StoryScreen";
-import ExploreScreen from "../screens/ExploreScreen";
+import CommunityScreen from "../screens/CommunityScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { theme } from "../constants/theme";
 
@@ -31,8 +31,8 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
             IconComponent = Home;
           } else if (route.name === "Story") {
             IconComponent = BookOpen;
-          } else if (route.name === "Explore") {
-            IconComponent = Search;
+          } else if (route.name === "Community") {
+            IconComponent = Users;
           } else if (route.name === "Profile") {
             IconComponent = User;
           }
@@ -83,10 +83,10 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
         }}
       />
       <Tab.Screen
-        name="Explore"
-        component={ExploreScreen}
+        name="Community"
+        component={CommunityScreen}
         options={{
-          tabBarLabel: "Explore",
+          tabBarLabel: "Community",
         }}
       />
       <Tab.Screen
