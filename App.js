@@ -18,6 +18,7 @@ import MessagingScreen from "./src/screens/MessagingScreen";
 import SubscriptionScreen from "./src/screens/SubscriptionScreen";
 import SavedLikedScreen from "./src/screens/SavedLikedScreen";
 import AnimationVideoScreen from "./src/screens/AnimationVideoScreen";
+import TimelineStoryManipulationScreen from "./src/screens/TimelineStoryManipulationScreen";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
           <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} />
           <Stack.Screen name="SavedLikedScreen" component={SavedLikedScreen} />
           <Stack.Screen name="AnimationVideoScreen" component={AnimationVideoScreen} />
+          <Stack.Screen name="TimelineStoryManipulationScreen" component={TimelineStoryManipulationScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GluestackUIProvider>
