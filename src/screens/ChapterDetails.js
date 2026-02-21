@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { Image as ImageIcon } from "lucide-react-native";
+import { Image as ImageIcon, Video } from "lucide-react-native";
 import Honeycomb from "../components/LoadingComponent";
 import { api } from "../api";
 import { theme } from "../constants/theme";
@@ -123,13 +123,25 @@ const ChapterDetails = ({ route, navigation }) => {
       </TouchableOpacity>
 
       {storyId && (
-        <TouchableOpacity
-          style={styles.imageGenButton}
-          onPress={handleImageGenerationPress}
-        >
-          <ImageIcon size={20} color={theme.colors.textPrimary} />
-          <Text style={styles.imageGenButtonText}>Generate Story Images</Text>
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={styles.imageGenButton}
+            onPress={handleImageGenerationPress}
+          >
+            <ImageIcon size={20} color={theme.colors.textPrimary} />
+            <Text style={styles.imageGenButtonText}>Generate Story Images</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.animationVideoButton}
+            onPress={() => navigation.navigate("AnimationVideoScreen", {
+              storyId,
+              chapterId: sceneId,
+            })}
+          >
+            <Video size={20} color={theme.colors.textPrimary} />
+            <Text style={styles.animationVideoButtonText}>Create Animation Video</Text>
+          </TouchableOpacity>
+        </>
       )}
 
       {showSituations && (
@@ -266,6 +278,21 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   imageGenButtonText: {
+    color: theme.colors.textPrimary,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  animationVideoButton: {
+    backgroundColor: theme.colors.primary,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 20,
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 10,
+  },
+  animationVideoButtonText: {
     color: theme.colors.textPrimary,
     fontSize: 16,
     fontWeight: "600",

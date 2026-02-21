@@ -697,4 +697,91 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+
+  // Animation Video Creation APIs
+  createAnimationVideo: async (story_id, chapter_id, animation_style, video_settings) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/animation-videos/create/",
+        { story_id, chapter_id, animation_style, video_settings },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, video: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getAnimationVideoStatus: async (video_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/animation-videos/${video_id}/status/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, status: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getAnimationVideo: async (video_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/animation-videos/${video_id}/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, video: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getMyAnimationVideos: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/animation-videos/my/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, videos: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getAnimationStyles: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/animation-videos/styles/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, styles: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  deleteAnimationVideo: async (video_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.delete(`/animation-videos/${video_id}/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, message: res.data.message };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };

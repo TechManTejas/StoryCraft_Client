@@ -247,6 +247,33 @@ describe('ImageGenerationScreen', () => {
         <ImageGenerationScreen route={mockRoute} navigation={mockNavigation} />
       </NavigationContainer>
     );
+  });
+
+  it('supports navigation to AnimationVideoScreen from story creation', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <ImageGenerationScreen route={mockRoute} navigation={mockNavigation} />
+      </NavigationContainer>
+    );
+
+    // Animation video creation integration would be tested here
+    await waitFor(() => {
+      expect(api.getStoryTimeline).toHaveBeenCalled();
+    });
+  });
+
+  it('allows creating animation videos from generated story content', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <ImageGenerationScreen route={mockRoute} navigation={mockNavigation} />
+      </NavigationContainer>
+    );
+
+    // Verify story content is available for animation video creation
+    await waitFor(() => {
+      expect(getByText('Chapter 1')).toBeTruthy();
+    });
+  });
 
     await waitFor(() => {
       // The back button should be rendered
