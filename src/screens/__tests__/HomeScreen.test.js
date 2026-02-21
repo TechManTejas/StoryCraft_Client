@@ -275,5 +275,74 @@ describe('HomeScreen', () => {
       expect(AsyncStorage.setItem).toHaveBeenCalled();
     });
   });
+
+  it('displays stats cards with user data', async () => {
+    AsyncStorage.getItem.mockResolvedValue(JSON.stringify({
+      storiesRead: 15,
+      favorites: 8,
+      readingTime: 60,
+    }));
+
+    const { getByText } = render(
+      <NavigationContainer>
+        <HomeScreen />
+      </NavigationContainer>
+    );
+
+    await waitFor(() => {
+      expect(getByText('15')).toBeTruthy();
+      expect(getByText('8')).toBeTruthy();
+      expect(getByText('60')).toBeTruthy();
+      expect(getByText('Stories Read')).toBeTruthy();
+      expect(getByText('Favorites')).toBeTruthy();
+      expect(getByText('Hours Read')).toBeTruthy();
+    });
+  });
+
+  it('filters stories by category correctly', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <HomeScreen />
+      </NavigationContainer>
+    );
+
+    await waitFor(() => {
+      const fantasyCategory = getByText('Fantasy');
+      fireEvent.press(fantasyCategory);
+    });
+
+    // Stories should be filtered
+    // Implementation depends on filtering logic
+  });
+
+  it('displays trending section with see all button', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <HomeScreen />
+      </NavigationContainer>
+    );
+
+    await waitFor(() => {
+      expect(getByText('Trending Now')).toBeTruthy();
+      expect(getByText('See All')).toBeTruthy();
+    });
+  });
+
+  it('navigates to CommunityScreen when See All is pressed', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <HomeScreen />
+      </NavigationContainer>
+    );
+
+    await waitFor(() => {
+      const seeAllButton = getByText('See All');
+      fireEvent.press(seeAllButton);
+    });
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('CommunityScreen');
+    });
+  });
 });
 

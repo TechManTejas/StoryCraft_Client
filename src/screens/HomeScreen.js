@@ -397,7 +397,7 @@ const HomeScreen = () => {
             </View>
             <TouchableOpacity
               style={styles.seeAllButton}
-              onPress={() => navigation.navigate("ExploreScreen")}
+              onPress={() => navigation.navigate("CommunityScreen")}
             >
               <Text style={styles.seeAllText}>See All</Text>
               <ArrowRight size={16} color={theme.colors.primary} />
