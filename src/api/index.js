@@ -303,4 +303,173 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+
+  // Reels APIs
+  createReel: async (story_id, video_url, caption, thumbnail_url) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/reels/",
+        { story_id, video_url, caption, thumbnail_url },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, reel: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getReels: async (page = 1, limit = 20) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/reels/", {
+        params: { page, limit },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, reels: res.data.results || res.data, total: res.data.count || res.data.length };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getReelDetails: async (reel_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/reels/${reel_id}/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, reel: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  likeReel: async (reel_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/reels/${reel_id}/like/`,
+        {},
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, liked: res.data.liked, likesCount: res.data.likes_count };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  shareReel: async (reel_id, recipient_username) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/reels/${reel_id}/share/`,
+        { recipient_username },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, message: res.data.message };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getMyReels: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/reels/my/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, reels: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  // Messaging APIs
+  getConversations: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/messages/conversations/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, conversations: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getMessages: async (conversation_id, page = 1) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/messages/conversations/${conversation_id}/messages/`, {
+        params: { page },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, messages: res.data.results || res.data, total: res.data.count || res.data.length };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  sendMessage: async (recipient_username, message, message_type = "text") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/messages/send/",
+        { recipient_username, message, message_type },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, message: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  createConversation: async (username) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/messages/conversations/",
+        { username },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, conversation: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  searchUsers: async (query) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/users/search/", {
+        params: { q: query },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, users: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };

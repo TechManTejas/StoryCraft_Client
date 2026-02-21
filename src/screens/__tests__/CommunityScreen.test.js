@@ -310,5 +310,52 @@ describe('CommunityScreen', () => {
     // Verify tab switching works
     expect(getByText('All Stories')).toBeTruthy();
   });
+
+  it('navigates to ReelsScreen when Reels button is pressed', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <CommunityScreen />
+      </NavigationContainer>
+    );
+
+    await waitFor(() => {
+      const reelsButton = getByText('Reels');
+      fireEvent.press(reelsButton);
+    });
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('ReelsScreen');
+    });
+  });
+
+  it('navigates to MessagingScreen when Messages button is pressed', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <CommunityScreen />
+      </NavigationContainer>
+    );
+
+    await waitFor(() => {
+      const messagesButton = getByText('Messages');
+      fireEvent.press(messagesButton);
+    });
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('MessagingScreen');
+    });
+  });
+
+  it('displays Reels and Messages navigation buttons', async () => {
+    const { getByText } = render(
+      <NavigationContainer>
+        <CommunityScreen />
+      </NavigationContainer>
+    );
+
+    await waitFor(() => {
+      expect(getByText('Reels')).toBeTruthy();
+      expect(getByText('Messages')).toBeTruthy();
+    });
+  });
 });
 
