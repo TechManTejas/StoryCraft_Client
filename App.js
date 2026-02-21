@@ -13,6 +13,8 @@ import StoryScreen from "./src/screens/StoryScreen";
 import ImageGenerationScreen from "./src/screens/ImageGenerationScreen";
 import CommunityScreen from "./src/screens/CommunityScreen";
 import PublicStoryDetailsScreen from "./src/screens/PublicStoryDetailsScreen";
+import ReelsScreen from "./src/screens/ReelsScreen";
+import MessagingScreen from "./src/screens/MessagingScreen";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -36,6 +38,8 @@ export default function App() {
           <Stack.Screen name="ImageGenerationScreen" component={ImageGenerationScreen} />
           <Stack.Screen name="CommunityScreen" component={CommunityScreen} />
           <Stack.Screen name="PublicStoryDetails" component={PublicStoryDetailsScreen} />
+          <Stack.Screen name="ReelsScreen" component={ReelsScreen} />
+          <Stack.Screen name="MessagingScreen" component={MessagingScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GluestackUIProvider>

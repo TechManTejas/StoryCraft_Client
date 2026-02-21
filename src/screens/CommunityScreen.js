@@ -28,6 +28,7 @@ import {
   ArrowRight,
   X,
   User,
+  Video,
 } from "lucide-react-native";
 import { api } from "../api";
 import { theme } from "../constants/theme";
@@ -310,6 +311,22 @@ const CommunityScreen = () => {
           <Sparkles size={28} color={theme.colors.secondary} />
         </View>
         <Text style={styles.headerSubtitle}>Discover stories from creators worldwide</Text>
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            style={styles.headerActionButton}
+            onPress={() => navigation.navigate("ReelsScreen")}
+          >
+            <Video size={20} color={theme.colors.primary} />
+            <Text style={styles.headerActionText}>Reels</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.headerActionButton}
+            onPress={() => navigation.navigate("MessagingScreen")}
+          >
+            <MessageCircle size={20} color={theme.colors.secondary} />
+            <Text style={styles.headerActionText}>Messages</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Tabs */}
@@ -503,6 +520,29 @@ const styles = StyleSheet.create({
     ...theme.typography.bodySmall,
     color: theme.colors.textSecondary,
     textAlign: "center",
+    marginBottom: theme.spacing.md,
+  },
+  headerActions: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: theme.spacing.md,
+    marginTop: theme.spacing.sm,
+  },
+  headerActionButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.xs,
+    backgroundColor: theme.colors.backgroundCard,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  headerActionText: {
+    ...theme.typography.bodySmall,
+    color: theme.colors.textPrimary,
+    fontWeight: "600",
   },
   tabsContainer: {
     flexDirection: "row",
