@@ -15,6 +15,8 @@ import CommunityScreen from "./src/screens/CommunityScreen";
 import PublicStoryDetailsScreen from "./src/screens/PublicStoryDetailsScreen";
 import ReelsScreen from "./src/screens/ReelsScreen";
 import MessagingScreen from "./src/screens/MessagingScreen";
+import SubscriptionScreen from "./src/screens/SubscriptionScreen";
+import SavedLikedScreen from "./src/screens/SavedLikedScreen";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -40,6 +42,8 @@ export default function App() {
           <Stack.Screen name="PublicStoryDetails" component={PublicStoryDetailsScreen} />
           <Stack.Screen name="ReelsScreen" component={ReelsScreen} />
           <Stack.Screen name="MessagingScreen" component={MessagingScreen} />
+          <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} />
+          <Stack.Screen name="SavedLikedScreen" component={SavedLikedScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </GluestackUIProvider>

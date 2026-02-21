@@ -472,4 +472,152 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+
+  // Subscription APIs
+  getSubscriptionPlans: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/subscriptions/plans/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, plans: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getCurrentSubscription: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/subscriptions/current/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, subscription: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  subscribe: async (plan_id, payment_method) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/subscriptions/subscribe/",
+        { plan_id, payment_method },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, subscription: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  cancelSubscription: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        "/subscriptions/cancel/",
+        {},
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, message: res.data.message };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  // Saved and Liked Content APIs
+  getSavedStories: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/saved/stories/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, stories: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getLikedStories: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/liked/stories/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, stories: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getSavedReels: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/saved/reels/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, reels: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getLikedReels: async () => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/liked/reels/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, reels: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  saveStory: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/stories/${story_id}/save/`,
+        {},
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, saved: res.data.saved };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  unsaveStory: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.delete(`/stories/${story_id}/save/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, saved: false };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert, SafeAreaView, ScrollView } from "react-native";
-import { User, BookOpen, LogOut, Trash2 } from "lucide-react-native";
+import { User, BookOpen, LogOut, Trash2, Crown, Bookmark, Heart } from "lucide-react-native";
 import { api } from "../api";
 import { theme } from "../constants/theme";
 
@@ -123,6 +123,26 @@ const ProfileScreen = ({ navigation }) => {
           />
         </View>
 
+        <View style={styles.quickActionsContainer}>
+          <TouchableOpacity
+            style={styles.quickActionButton}
+            onPress={() => navigation.navigate("SavedLikedScreen")}
+            activeOpacity={0.8}
+          >
+            <Bookmark size={24} color={theme.colors.primary} />
+            <Text style={styles.quickActionText}>Saved & Liked</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.quickActionButton}
+            onPress={() => navigation.navigate("SubscriptionScreen")}
+            activeOpacity={0.8}
+          >
+            <Crown size={24} color={theme.colors.accent} />
+            <Text style={styles.quickActionText}>Subscription</Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.actionsContainer}>
           <TouchableOpacity 
             style={styles.actionButton} 
@@ -227,9 +247,33 @@ const styles = StyleSheet.create({
     color: theme.colors.textPrimary,
     fontWeight: '500',
   },
-  actionsContainer: {
+  quickActionsContainer: {
+    flexDirection: "row",
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.xl,
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.md,
+  },
+  quickActionButton: {
+    flex: 1,
+    backgroundColor: theme.colors.backgroundCard,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing.lg,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    ...theme.shadows.medium,
+    gap: theme.spacing.sm,
+  },
+  quickActionText: {
+    ...theme.typography.bodySmall,
+    color: theme.colors.textPrimary,
+    fontWeight: "600",
+  },
+  actionsContainer: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.lg,
     gap: theme.spacing.md,
   },
   actionButton: {
