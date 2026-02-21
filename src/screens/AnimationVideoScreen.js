@@ -33,6 +33,7 @@ import {
   Zap,
   Palette,
   Sliders,
+  GitBranch,
 } from "lucide-react-native";
 import { api } from "../api";
 import { theme } from "../constants/theme";
@@ -435,12 +436,20 @@ const AnimationVideoScreen = () => {
           <Video size={24} color={theme.colors.primary} />
           <Text style={styles.headerTitle}>Animation Video</Text>
         </View>
-        <TouchableOpacity
-          style={styles.headerButton}
-          onPress={() => setShowSettings(!showSettings)}
-        >
-          <Settings size={24} color={theme.colors.primary} />
-        </TouchableOpacity>
+          <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => navigation.navigate("TimelineStoryManipulationScreen", { storyId: selectedStory?.id || storyId })}
+            >
+              <GitBranch size={24} color={theme.colors.secondary} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={() => setShowSettings(!showSettings)}
+            >
+              <Settings size={24} color={theme.colors.primary} />
+            </TouchableOpacity>
+          </View>
       </View>
 
       <ScrollView
@@ -683,6 +692,10 @@ const styles = StyleSheet.create({
   },
   headerButton: {
     padding: theme.spacing.sm,
+  },
+  headerActions: {
+    flexDirection: "row",
+    gap: theme.spacing.xs,
   },
   headerContent: {
     flexDirection: "row",

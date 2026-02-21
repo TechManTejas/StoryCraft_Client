@@ -784,4 +784,127 @@ export const api = {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
     }
   },
+
+  // Timeline Story Manipulation APIs
+  getStoryTimelines: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/stories/${story_id}/timelines/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, timelines: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getTimelineDetails: async (story_id, timeline_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/stories/${story_id}/timelines/${timeline_id}/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, timeline: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  createTimelineBranch: async (story_id, scene_id, choice_text) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/stories/${story_id}/timelines/branch/`,
+        { scene_id, choice_text },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, timeline: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  updateTimelineScene: async (story_id, timeline_id, scene_id, updates) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.patch(
+        `/stories/${story_id}/timelines/${timeline_id}/scenes/${scene_id}/`,
+        updates,
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, scene: res.data, animation_updated: res.data.animation_updated };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getTimelineAnimations: async (story_id, timeline_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/stories/${story_id}/timelines/${timeline_id}/animations/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, animations: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  syncAnimationWithStory: async (story_id, timeline_id, animation_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/stories/${story_id}/timelines/${timeline_id}/animations/${animation_id}/sync/`,
+        {},
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, animation: res.data, synced: true };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  autoUpdateAnimations: async (story_id, timeline_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/stories/${story_id}/timelines/${timeline_id}/animations/auto-update/`,
+        {},
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, updated_animations: res.data.updated_animations };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  navigateTimeline: async (story_id, from_timeline_id, to_timeline_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/stories/${story_id}/timelines/navigate/`,
+        { from_timeline_id, to_timeline_id },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, timeline: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
 };
