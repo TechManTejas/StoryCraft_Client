@@ -34,9 +34,11 @@ import {
   Palette,
   Sliders,
   GitBranch,
+  Edit3,
 } from "lucide-react-native";
 import { api } from "../api";
 import { theme } from "../constants/theme";
+import AnimationVideoEditor from "../components/AnimationVideoEditor";
 
 const AnimationVideoScreen = () => {
   const navigation = useNavigation();
@@ -62,6 +64,8 @@ const AnimationVideoScreen = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [videoStatus, setVideoStatus] = useState({});
   const [pollingInterval, setPollingInterval] = useState(null);
+  const [editingVideo, setEditingVideo] = useState(null);
+  const [showEditor, setShowEditor] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
@@ -261,6 +265,25 @@ const AnimationVideoScreen = () => {
     );
   };
 
+  const handleEditVideo = (video) => {
+    setEditingVideo(video);
+    setShowEditor(true);
+  };
+
+  const handleEditorSave = (updatedVideo) => {
+    setCreatedVideos((prev) =>
+      prev.map((v) => (v.id === updatedVideo.id ? updatedVideo : v))
+    );
+    setShowEditor(false);
+    setEditingVideo(null);
+    loadData(); // Refresh data
+  };
+
+  const handleEditorClose = () => {
+    setShowEditor(false);
+    setEditingVideo(null);
+  };
+
   const renderStoryCard = (story) => (
     <TouchableOpacity
       style={[
@@ -363,6 +386,12 @@ const AnimationVideoScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.videoActionButton}>
                   <Download size={18} color={theme.colors.accent} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.videoActionButton}
+                  onPress={() => handleEditVideo(item)}
+                >
+                  <Edit3 size={18} color={theme.colors.info} />
                 </TouchableOpacity>
               </>
             )}
@@ -662,6 +691,14 @@ const AnimationVideoScreen = () => {
           </View>
         </View>
       </Modal>
+
+      {/* Animation Video Editor */}
+      <AnimationVideoEditor
+        visible={showEditor}
+        video={editingVideo}
+        onClose={handleEditorClose}
+        onSave={handleEditorSave}
+      />
     </SafeAreaView>
   );
 };
