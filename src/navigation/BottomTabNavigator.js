@@ -49,10 +49,11 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
           backgroundColor: theme.colors.backgroundSecondary,
           borderTopWidth: 1,
           borderTopColor: theme.colors.border,
-          height: 65,
-          paddingBottom: 10,
-          paddingTop: 10,
+          height: 70,
+          paddingBottom: 12,
+          paddingTop: 8,
           ...theme.shadows.large,
+          elevation: 8,
         },
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.textMuted,
@@ -61,10 +62,14 @@ const BottomTabNavigator = ({ setIsLoggedIn }) => {
         tabBarLabelStyle: {
           ...theme.typography.caption,
           fontWeight: '600',
-          marginTop: 4,
+          marginTop: 2,
+          fontSize: 12,
         },
         tabBarIconStyle: {
-          marginTop: 4,
+          marginTop: 2,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 4,
         },
       })}
     >

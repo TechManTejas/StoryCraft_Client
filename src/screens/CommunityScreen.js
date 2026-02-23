@@ -585,10 +585,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.backgroundSecondary,
     borderRadius: theme.borderRadius.lg,
     paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
+    paddingVertical: theme.spacing.md,
     borderWidth: 1,
     borderColor: theme.colors.border,
     gap: theme.spacing.sm,
+    minHeight: 48,
   },
   searchInput: {
     flex: 1,
@@ -606,12 +607,13 @@ const styles = StyleSheet.create({
   },
   genreChip: {
     paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
+    paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius.round,
     backgroundColor: theme.colors.backgroundCard,
     borderWidth: 1,
     borderColor: theme.colors.border,
     marginRight: theme.spacing.sm,
+    minHeight: 40,
   },
   genreChipActive: {
     backgroundColor: theme.colors.primary,
@@ -829,9 +831,11 @@ const styles = StyleSheet.create({
   readButton: {
     marginLeft: "auto",
     backgroundColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.lg,
     paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
+    minHeight: 36,
+    ...theme.shadows.small,
   },
   readButtonText: {
     ...theme.typography.bodySmall,

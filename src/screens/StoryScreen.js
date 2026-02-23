@@ -180,15 +180,16 @@ const styles = StyleSheet.create({
   genreCard: {
     backgroundColor: theme.colors.backgroundCard,
     padding: theme.spacing.lg,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: theme.borderRadius.xl,
     marginBottom: theme.spacing.md,
     justifyContent: "center",
     alignItems: "center",
-    minHeight: 90,
+    minHeight: 100,
     width: "48%",
     borderWidth: 2,
     borderColor: theme.colors.border,
     ...theme.shadows.medium,
+    transition: 'all 0.3s ease',
   },
   genreText: {
     ...theme.typography.body,
@@ -203,11 +204,12 @@ const styles = StyleSheet.create({
   letsGoButton: {
     backgroundColor: theme.colors.primary,
     padding: theme.spacing.lg,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: theme.borderRadius.xl,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
     marginTop: theme.spacing.md,
+    minHeight: 56,
     ...theme.shadows.glow,
   },
   letsGoButtonText: {

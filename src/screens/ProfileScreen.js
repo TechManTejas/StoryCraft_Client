@@ -773,7 +773,7 @@ const styles = StyleSheet.create({
   quickActionButton: {
     flex: 1,
     backgroundColor: theme.colors.backgroundCard,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: theme.borderRadius.xl,
     padding: theme.spacing.lg,
     alignItems: "center",
     justifyContent: "center",
@@ -781,6 +781,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     ...theme.shadows.medium,
     gap: theme.spacing.sm,
+    minHeight: 100,
   },
   quickActionText: {
     ...theme.typography.bodySmall,
@@ -956,6 +957,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     paddingVertical: theme.spacing.md,
     borderRadius: theme.borderRadius.lg,
+    minHeight: 50,
+    ...theme.shadows.medium,
   },
   submitButtonDisabled: {
     opacity: 0.6,
