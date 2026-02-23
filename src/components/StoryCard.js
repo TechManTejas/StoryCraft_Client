@@ -9,31 +9,35 @@ const StoryCard = ({ title, author, description, image, rating, views, chapters 
   const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
   const toggleLike = () => {
+    const newLiked = !liked;
+    setLiked(newLiked);
+    
     Animated.sequence([
       Animated.timing(scaleAnim, {
-        toValue: 1.2,
-        duration: 150,
+        toValue: 1.3,
+        duration: 100,
         useNativeDriver: true,
       }),
-      Animated.timing(scaleAnim, {
+      Animated.spring(scaleAnim, {
         toValue: 1,
-        duration: 150,
+        tension: 300,
+        friction: 10,
         useNativeDriver: true,
       }),
     ]).start();
-    setLiked(!liked);
   };
 
   return (
     <Card style={styles.card}>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={image} />
+        <Image style={styles.image} source={image} resizeMode="cover" />
         <View style={styles.imageOverlay} />
         <View style={styles.overlay}>
           <View style={styles.comingSoonBadge}>
             <Text style={styles.comingSoonText}>Coming Soon</Text>
           </View>
         </View>
+        <View style={styles.imageGradient} />
       </View>
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={2}>{title}</Text>
@@ -114,7 +118,16 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  imageGradient: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 100,
+    backgroundColor: 'transparent',
+    background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)',
   },
   overlay: {
     position: "absolute",
@@ -199,6 +212,8 @@ const styles = StyleSheet.create({
   likeButton: {
     padding: theme.spacing.xs,
     marginLeft: theme.spacing.sm,
+    borderRadius: theme.borderRadius.round,
+    backgroundColor: 'transparent',
   },
 });
 

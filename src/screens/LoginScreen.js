@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView, ActivityIndicator } from "react-native";
 import {
   Button,
   Input,
@@ -20,6 +20,7 @@ const LoginScreen = ({ navigation }) => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [inputTouched, setInputTouched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const slideAnim = React.useRef(new Animated.Value(50)).current;
 
@@ -43,19 +44,39 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
-    const data = await api.login(username, password);
+    // Reset errors
+    setUsernameError("");
+    setPasswordError("");
+    
+    // Basic validation
+    if (!username.trim()) {
+      setUsernameError("Username is required");
+      return;
+    }
+    if (!password.trim()) {
+      setPasswordError("Password is required");
+      return;
+    }
 
-    if (data.isSuccess) {
-      await AsyncStorage.setItem("userToken", data.token);
-      await AsyncStorage.setItem("username", username); 
-      navigation.navigate("BottomTabNavigator");
-    } else {
-      if (!data.userFound) {
-        setUsernameError("No user found. Please sign up.");
+    setIsLoading(true);
+    try {
+      const data = await api.login(username, password);
+
+      if (data.isSuccess) {
+        await AsyncStorage.setItem("userToken", data.token);
+        await AsyncStorage.setItem("username", username); 
+        navigation.navigate("BottomTabNavigator");
       } else {
-        setPasswordError("Incorrect password. Please try again.");
+        if (data.message?.toLowerCase().includes("user") || data.message?.toLowerCase().includes("username")) {
+          setUsernameError(data.message || "No user found. Please sign up.");
+        } else {
+          setPasswordError(data.message || "Incorrect password. Please try again.");
+        }
       }
-      console.log(JSON.stringify(data, null, 1));
+    } catch (error) {
+      setPasswordError("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -90,14 +111,22 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.credentialsHeading}>
               Sample Credentials
             </Text>
-            <View style={styles.credentialsContent}>
+            <TouchableOpacity
+              style={styles.credentialRow}
+              onPress={() => setUsername("arjun")}
+              activeOpacity={0.7}
+            >
               <Text style={styles.credentialsLabel}>Username:</Text>
               <Text style={styles.credentialsValue}>arjun</Text>
-            </View>
-            <View style={styles.credentialsContent}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.credentialRow}
+              onPress={() => setPassword("arjun")}
+              activeOpacity={0.7}
+            >
               <Text style={styles.credentialsLabel}>Password:</Text>
               <Text style={styles.credentialsValue}>arjun</Text>
-            </View>
+            </TouchableOpacity>
           </View>
 
           <FormControl style={styles.formControl}>
@@ -120,7 +149,7 @@ const LoginScreen = ({ navigation }) => {
                     style={styles.inputField}
                   />
                 </Input>
-                {(usernameError || inputTouched) && (
+                {usernameError && (
                   <Text style={styles.errorText}>{usernameError}</Text>
                 )}
               </VStack>
@@ -147,7 +176,7 @@ const LoginScreen = ({ navigation }) => {
                     />
                   </InputSlot>
                 </Input>
-                {(passwordError || inputTouched) && (
+                {passwordError && (
                   <Text style={styles.errorText}>{passwordError}</Text>
                 )}
               </VStack>
@@ -155,10 +184,15 @@ const LoginScreen = ({ navigation }) => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   onPress={handleLogin}
-                  style={styles.loginButton}
+                  style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
                   activeOpacity={0.8}
+                  disabled={isLoading}
                 >
-                  <Text style={styles.buttonText}>Login</Text>
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+                  ) : (
+                    <Text style={styles.buttonText}>Login</Text>
+                  )}
                 </TouchableOpacity>
               </View>
               
@@ -224,6 +258,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: theme.spacing.sm,
   },
+  credentialRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.sm,
+    borderRadius: theme.borderRadius.sm,
+  },
   credentialsLabel: {
     ...theme.typography.body,
     color: theme.colors.textSecondary,
@@ -279,7 +321,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.xl,
     alignItems: "center",
     justifyContent: "center",
+    minHeight: 50,
     ...theme.shadows.glow,
+  },
+  loginButtonDisabled: {
+    opacity: 0.7,
   },
   buttonText: {
     ...theme.typography.button,

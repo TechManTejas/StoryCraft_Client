@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Animated, SafeAreaView, ActivityIndicator } from "react-native";
 import {
   Button,
   Input,
@@ -19,6 +19,9 @@ const SignupScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const slideAnim = React.useRef(new Animated.Value(50)).current;
 
@@ -44,6 +47,32 @@ const SignupScreen = ({ navigation }) => {
 
   // Handle signup logic
   const handleSignup = async () => {
+    // Reset errors
+    setErrorMessage("");
+    setUsernameError("");
+    setPasswordError("");
+    
+    // Validation
+    let hasError = false;
+    if (!username.trim()) {
+      setUsernameError("Username is required");
+      hasError = true;
+    } else if (username.length < 3) {
+      setUsernameError("Username must be at least 3 characters");
+      hasError = true;
+    }
+    
+    if (!password.trim()) {
+      setPasswordError("Password is required");
+      hasError = true;
+    } else if (password.length < 4) {
+      setPasswordError("Password must be at least 4 characters");
+      hasError = true;
+    }
+    
+    if (hasError) return;
+
+    setIsLoading(true);
     try {
       const data = await api.signUp(username, password);
 
@@ -52,22 +81,24 @@ const SignupScreen = ({ navigation }) => {
         await AsyncStorage.setItem("username", username);
         navigation.navigate("BottomTabNavigator");
       } else {
-        // Set error message based on the response
-        if (data.message === "User already exists") {
-          setErrorMessage("User already exists. Please try a different username.");
+        if (data.message?.toLowerCase().includes("exists") || data.message?.toLowerCase().includes("already")) {
+          setUsernameError(data.message || "User already exists. Please try a different username.");
         } else {
-          setErrorMessage("Signup failed. Please try again.");
+          setErrorMessage(data.message || "Signup failed. Please try again.");
         }
       }
     } catch (error) {
-      console.log(error);
       setErrorMessage("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Function to handle input focus to clear error message
-  const handleFocus = () => {
-    setErrorMessage(""); // Clear error message on input focus
+  const handleFocus = (field) => {
+    setErrorMessage("");
+    if (field === "username") setUsernameError("");
+    if (field === "password") setPasswordError("");
   };
 
   // Reset state on screen focus
@@ -113,31 +144,40 @@ const SignupScreen = ({ navigation }) => {
                 <Text style={styles.label}>Username</Text>
                 <Input 
                   variant="outline" 
-                  onFocus={handleFocus}
-                  style={styles.input}
+                  onFocus={() => handleFocus("username")}
+                  style={[styles.input, usernameError && styles.inputError]}
                 >
                   <InputField
                     placeholder="Choose a username"
                     placeholderTextColor={theme.colors.textMuted}
                     value={username}
-                    onChangeText={(text) => setUsername(text)}
+                    onChangeText={(text) => {
+                      setUsername(text);
+                      if (usernameError) setUsernameError("");
+                    }}
                     style={styles.inputField}
                   />
                 </Input>
+                {usernameError && (
+                  <Text style={styles.errorText}>{usernameError}</Text>
+                )}
               </VStack>
               
               <VStack space="xs">
                 <Text style={styles.label}>Password</Text>
                 <Input 
                   variant="outline" 
-                  onFocus={handleFocus}
-                  style={styles.input}
+                  onFocus={() => handleFocus("password")}
+                  style={[styles.input, passwordError && styles.inputError]}
                 >
                   <InputField
                     placeholder="Create a password"
                     placeholderTextColor={theme.colors.textMuted}
                     value={password}
-                    onChangeText={(text) => setPassword(text)}
+                    onChangeText={(text) => {
+                      setPassword(text);
+                      if (passwordError) setPasswordError("");
+                    }}
                     type={showPassword ? "text" : "password"}
                     style={styles.inputField}
                   />
@@ -148,15 +188,23 @@ const SignupScreen = ({ navigation }) => {
                     />
                   </InputSlot>
                 </Input>
+                {passwordError && (
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                )}
               </VStack>
               
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   onPress={handleSignup}
-                  style={styles.signupButton}
+                  style={[styles.signupButton, isLoading && styles.signupButtonDisabled]}
                   activeOpacity={0.8}
+                  disabled={isLoading}
                 >
-                  <Text style={styles.buttonText}>Sign Up</Text>
+                  {isLoading ? (
+                    <ActivityIndicator size="small" color={theme.colors.textPrimary} />
+                  ) : (
+                    <Text style={styles.buttonText}>Sign Up</Text>
+                  )}
                 </TouchableOpacity>
               </View>
               
@@ -244,6 +292,10 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.backgroundSecondary,
   },
+  inputError: {
+    borderColor: theme.colors.error,
+    borderWidth: 2,
+  },
   inputField: {
     ...theme.typography.body,
     color: theme.colors.textPrimary,
@@ -259,7 +311,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.xl,
     alignItems: "center",
     justifyContent: "center",
+    minHeight: 50,
     ...theme.shadows.glow,
+  },
+  signupButtonDisabled: {
+    opacity: 0.7,
+  },
+  errorText: {
+    ...theme.typography.caption,
+    color: theme.colors.error,
+    marginTop: theme.spacing.xs,
   },
   buttonText: {
     ...theme.typography.button,

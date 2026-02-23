@@ -1,50 +1,71 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { theme } from '../constants/theme';
 
 const Honeycomb = ({
-  color = '#f3f3f3',
+  color = theme.colors.primary,
   size = 72,
   cellSize = 24,
-  animationDuration = 700,
+  animationDuration = 800,
 }) => {
-  const animatedValue = new Animated.Value(0);
+  const animatedValues = useRef(
+    Array.from({ length: 7 }, () => new Animated.Value(0))
+  ).current;
 
-  Animated.loop(
-    Animated.sequence([
-      Animated.timing(animatedValue, {
-        toValue: 1,
-        duration: animationDuration,
-        easing: Easing.inOut(Easing.ease),
-        useNativeDriver: true,
-      }),
-      Animated.timing(animatedValue, {
-        toValue: 0,
-        duration: animationDuration,
-        easing: Easing.inOut(Easing.ease),
-        useNativeDriver: true,
-      }),
-    ])
-  ).start();
+  useEffect(() => {
+    const animations = animatedValues.map((animValue, index) => {
+      return Animated.loop(
+        Animated.sequence([
+          Animated.delay(index * 100),
+          Animated.timing(animValue, {
+            toValue: 1,
+            duration: animationDuration,
+            easing: Easing.out(Easing.cubic),
+            useNativeDriver: true,
+          }),
+          Animated.timing(animValue, {
+            toValue: 0,
+            duration: animationDuration,
+            easing: Easing.in(Easing.cubic),
+            useNativeDriver: true,
+          }),
+        ])
+      );
+    });
 
-  const interpolatedScale = animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 1],
-  });
+    Animated.parallel(animations).start();
+  }, []);
 
   return (
     <View style={[styles.honeycomb, { height: size, width: size }]}>
-      {Array.from({ length: 7 }).map((_, index) => (
-        <Animated.View
-          key={index}
-          style={[
-            styles.honeycombCell,
-            styles[`cell${index + 1}`],
-            { transform: [{ scale: interpolatedScale }], backgroundColor: color },
-          ]}
-          accessible={true}
-          accessibilityLabel={`Honeycomb Cell ${index + 1}`}
-        />
-      ))}
+      {Array.from({ length: 7 }).map((_, index) => {
+        const scale = animatedValues[index].interpolate({
+          inputRange: [0, 1],
+          outputRange: [0.3, 1],
+        });
+
+        const opacity = animatedValues[index].interpolate({
+          inputRange: [0, 0.5, 1],
+          outputRange: [0.3, 1, 0.3],
+        });
+
+        return (
+          <Animated.View
+            key={index}
+            style={[
+              styles.honeycombCell,
+              styles[`cell${index + 1}`],
+              {
+                transform: [{ scale }],
+                backgroundColor: color,
+                opacity,
+              },
+            ]}
+            accessible={true}
+            accessibilityLabel={`Honeycomb Cell ${index + 1}`}
+          />
+        );
+      })}
     </View>
   );
 };
