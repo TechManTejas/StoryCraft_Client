@@ -785,6 +785,54 @@ export const api = {
     }
   },
 
+  updateAnimationVideo: async (video_id, updates) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.patch(
+        `/animation-videos/${video_id}/`,
+        updates,
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, video: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  editAnimationVideoSettings: async (video_id, video_settings) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.put(
+        `/animation-videos/${video_id}/settings/`,
+        { video_settings },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, video: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  regenerateAnimationVideo: async (video_id, animation_style, video_settings) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.post(
+        `/animation-videos/${video_id}/regenerate/`,
+        { animation_style, video_settings },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      if (res.data) {
+        return { isSuccess: true, video: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
   // Timeline Story Manipulation APIs
   getStoryTimelines: async (story_id) => {
     try {
