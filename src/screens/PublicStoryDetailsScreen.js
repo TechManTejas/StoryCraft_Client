@@ -26,6 +26,7 @@ import {
   TrendingUp,
   Send,
   MoreVertical,
+  BarChart3,
 } from "lucide-react-native";
 import { api } from "../api";
 import { theme } from "../constants/theme";
@@ -301,6 +302,16 @@ const PublicStoryDetailsScreen = ({ route }) => {
                 <Share2 size={24} color={theme.colors.textSecondary} />
                 <Text style={styles.actionButtonText}>Share</Text>
               </TouchableOpacity>
+
+              {story.is_owner && (
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={() => navigation.navigate("StoryAnalysisScreen", { storyId: story.id })}
+                >
+                  <BarChart3 size={24} color={theme.colors.info} />
+                  <Text style={styles.actionButtonText}>Analytics</Text>
+                </TouchableOpacity>
+              )}
             </View>
 
             {/* Story Meta */}

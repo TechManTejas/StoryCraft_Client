@@ -38,6 +38,7 @@ import {
   X,
   Send,
   Sparkles,
+  BarChart3,
 } from "lucide-react-native";
 import { api } from "../api";
 import { theme } from "../constants/theme";
@@ -520,6 +521,15 @@ const ProfileScreen = ({ navigation }) => {
             <Crown size={24} color={theme.colors.accent} />
             <Text style={styles.quickActionText}>Subscription</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.quickActionButton}
+            onPress={() => navigation.navigate("UserAnalysisScreen")}
+            activeOpacity={0.8}
+          >
+            <BarChart3 size={24} color={theme.colors.info} />
+            <Text style={styles.quickActionText}>My Analytics</Text>
+          </TouchableOpacity>
         </Animated.View>
 
         {/* My Library Section */}
@@ -771,7 +781,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.md,
   },
   quickActionButton: {
-    flex: 1,
+    width: "31%",
     backgroundColor: theme.colors.backgroundCard,
     borderRadius: theme.borderRadius.xl,
     padding: theme.spacing.lg,
