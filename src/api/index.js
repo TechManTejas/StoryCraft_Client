@@ -199,6 +199,20 @@ export const api = {
     }
   },
 
+  getStoryDetails: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/stories/${story_id}/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, story: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
   likeStory: async (story_id) => {
     try {
       const token = await getAuthToken();
@@ -950,6 +964,142 @@ export const api = {
       );
       if (res.data) {
         return { isSuccess: true, timeline: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  // User Analysis APIs
+  getUserAnalysis: async (period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/analytics/user/", {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, analysis: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getUserActivityTimeline: async (period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/analytics/user/activity/", {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, timeline: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getUserEngagementMetrics: async (period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/analytics/user/engagement/", {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, metrics: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getUserContentPerformance: async (period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/analytics/user/content/", {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, performance: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  // Story Analysis APIs
+  getStoryAnalysis: async (story_id, period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/analytics/stories/${story_id}/`, {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, analysis: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getStoryPerformanceMetrics: async (story_id, period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/analytics/stories/${story_id}/performance/`, {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, metrics: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getStoryEngagementData: async (story_id, period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/analytics/stories/${story_id}/engagement/`, {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, engagement: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getStoryReaderDemographics: async (story_id) => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get(`/analytics/stories/${story_id}/demographics/`, {
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, demographics: res.data };
+      }
+    } catch (err) {
+      return { isSuccess: false, message: err.response?.data?.message || err.message };
+    }
+  },
+
+  getAllStoriesAnalysis: async (period = "30d") => {
+    try {
+      const token = await getAuthToken();
+      const res = await axiosInstance.get("/analytics/stories/all/", {
+        params: { period },
+        headers: { Authorization: `Token ${token}` },
+      });
+      if (res.data) {
+        return { isSuccess: true, analysis: res.data };
       }
     } catch (err) {
       return { isSuccess: false, message: err.response?.data?.message || err.message };
